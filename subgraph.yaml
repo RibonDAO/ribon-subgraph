@@ -1,0 +1,35 @@
+specVersion: 0.0.1
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Ribon
+    network: mumbai
+    source:
+      address: "0xA63B4b2cb11B79a535c7B8b9269E729b4d7cE056"
+      abi: Ribon
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - DonationAdded
+        - IntegrationBalanceUpdated
+        - NonProfitAdded
+        - NonProfitRemoved
+        - PoolBalanceIncreased
+      abis:
+        - name: Ribon
+          file: ./abis/Ribon.json
+      eventHandlers:
+        - event: DonationAdded(address,address,address,uint256)
+          handler: handleDonationAdded
+        - event: IntegrationBalanceUpdated(address,uint256)
+          handler: handleIntegrationBalanceUpdated
+        - event: NonProfitAdded(address)
+          handler: handleNonProfitAdded
+        - event: NonProfitRemoved(address)
+          handler: handleNonProfitRemoved
+        - event: PoolBalanceIncreased(address,uint256)
+          handler: handlePoolBalanceIncreased
+      file: ./src/mapping.ts
