@@ -1,6 +1,6 @@
 specVersion: 0.0.2
 schema:
-  file: ./schema.graphql
+  file: schema.graphql
 dataSources:
   - kind: ethereum
     name: Ribon
@@ -19,7 +19,7 @@ dataSources:
         - DonationBalance
       abis:
         - name: Ribon
-          file: ./abis/Ribon.json
+          file: Ribon/abis/Ribon.json
       eventHandlers:
         - event: DonationAdded(address,address,address,uint256)
           handler: handleDonationAdded
@@ -31,4 +31,4 @@ dataSources:
           handler: handleNonProfitRemoved
         - event: PoolBalanceIncreased(address,uint256)
           handler: handlePoolBalanceIncreased
-      file: ./src/mapping.ts
+      file: Ribon/Ribon.wasm
