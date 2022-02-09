@@ -65,10 +65,11 @@ export function handleDonationAdded(event: DonationAdded): void {
 export function handleIntegrationBalanceUpdated(
   event: IntegrationBalanceUpdated
 ): void {
-  let entity = Integration.load(event.transaction.from.toHex());
+  let integration =  event.params.integration.toHex();
+  let entity = Integration.load(integration);
 
   if (!entity) {
-    entity = new Integration(event.transaction.from.toHex());
+    entity = new Integration(integration);
     entity.balance = BigInt.fromI32(0);
   }
 
@@ -78,10 +79,12 @@ export function handleIntegrationBalanceUpdated(
 }
 
 export function handleNonProfitAdded(event: NonProfitAdded): void {
-  let entity = NonProfit.load(event.transaction.from.toHex());
+  let nonProfit = event.params.nonProfit.toHex();
+  let entity = NonProfit.load(nonProfit);
+  //let entity = NonProfit.load(event.transaction.from.toHex());
 
-  if (!entity) {
-    entity = new NonProfit(event.transaction.from.toHex());
+  if (entity == null) {
+    entity = new NonProfit(nonProfit);
   }
 
   entity.nonProfit = event.params.nonProfit;
@@ -91,10 +94,11 @@ export function handleNonProfitAdded(event: NonProfitAdded): void {
 }
 
 export function handleNonProfitRemoved(event: NonProfitRemoved): void {
-  let entity = NonProfit.load(event.transaction.from.toHex());
+  let nonProfit = event.params.nonProfit.toHex();
+  let entity = NonProfit.load(nonProfit);
 
   if (!entity) {
-    entity = new NonProfit(event.transaction.from.toHex());
+    entity = new NonProfit(nonProfit);
   }
 
   entity.nonProfit = event.params.nonProfit;
