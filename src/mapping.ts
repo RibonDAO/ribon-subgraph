@@ -17,12 +17,15 @@ import {
 export function handleDonationAdded(event: DonationAdded): void {
   // Entities can be loaded from the store using a string ID; this ID
   // needs to be unique across all entities of the same type
-  let entity = DonationBalance.load(event.transaction.from.toHex());
+  let idDonation = event.params.user.toHex() 
+                    + event.params.integration.toHex() 
+                    + event.params.nonProfit.toHex();
+  let entity = DonationBalance.load(idDonation);
 
   // Entities only exist after they have been saved to the store;
   // `null` checks allow to create entities on demand
   if (!entity) {
-    entity = new DonationBalance(event.transaction.from.toHex());
+    entity = new DonationBalance(idDonation);
     entity.totalDonated = BigInt.fromI32(0);
   }
 
@@ -87,7 +90,6 @@ export function handleNonProfitAdded(event: NonProfitAdded): void {
     entity = new NonProfit(nonProfit);
   }
 
-  entity.nonProfit = event.params.nonProfit;
   entity.isNonProfitOnWhitelist = true;
 
   entity.save();
@@ -101,17 +103,17 @@ export function handleNonProfitRemoved(event: NonProfitRemoved): void {
     entity = new NonProfit(nonProfit);
   }
 
-  entity.nonProfit = event.params.nonProfit;
   entity.isNonProfitOnWhitelist = false;
 
   entity.save();
 }
 
 export function handlePoolBalanceIncreased(event: PoolBalanceIncreased): void {
-  let entity = Promoter.load(event.transaction.from.toHex());
+  let idPromoter = event.transaction.from.toHex()
+  let entity = Promoter.load(idPromoter);
 
   if (!entity) {
-    entity = new Promoter(event.transaction.from.toHex());
+    entity = new Promoter(idPromoter);
     entity.totalDonated = BigInt.fromI32(0);
   }
 

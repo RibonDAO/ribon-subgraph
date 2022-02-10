@@ -16,7 +16,6 @@ export class NonProfit extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
-    this.set("nonProfit", Value.fromBytes(Bytes.empty()));
     this.set("isNonProfitOnWhitelist", Value.fromBoolean(false));
   }
 
@@ -44,15 +43,6 @@ export class NonProfit extends Entity {
 
   set id(value: string) {
     this.set("id", Value.fromString(value));
-  }
-
-  get nonProfit(): Bytes {
-    let value = this.get("nonProfit");
-    return value!.toBytes();
-  }
-
-  set nonProfit(value: Bytes) {
-    this.set("nonProfit", Value.fromBytes(value));
   }
 
   get isNonProfitOnWhitelist(): boolean {

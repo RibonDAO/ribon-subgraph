@@ -1,6 +1,5 @@
 type NonProfit @entity {
   id: ID!
-  nonProfit: Bytes!
   isNonProfitOnWhitelist: Boolean!
 }
 
