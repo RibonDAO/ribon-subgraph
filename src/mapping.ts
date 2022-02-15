@@ -17,9 +17,10 @@ import {
 export function handleDonationAdded(event: DonationAdded): void {
   // Entities can be loaded from the store using a string ID; this ID
   // needs to be unique across all entities of the same type
-  let idDonation = event.params.user.toHex() 
-                    + event.params.integration.toHex() 
-                    + event.params.nonProfit.toHex();
+  let idDonation =
+    event.params.user.toHex() +
+    event.params.integration.toHex() +
+    event.params.nonProfit.toHex();
   let entity = DonationBalance.load(idDonation);
 
   // Entities only exist after they have been saved to the store;
@@ -30,7 +31,15 @@ export function handleDonationAdded(event: DonationAdded): void {
   }
 
   // BigInt and BigDecimal math are supported
-  entity.totalDonated = BigInt.fromI32(10);
+  // refactor to use BigInt
+  let entityBalance = entity.totalDonated;
+  let eventAmount = event.params.amount;
+
+  let entityTotalDonated =
+    parseInt(`${entityBalance}`) + parseInt(`${eventAmount}`);
+
+  entity.totalDonated = BigInt.fromI32(entityTotalDonated);
+
   // Entity fields can be set based on event parameters
   entity.user = event.params.user;
   entity.integration = event.params.integration;
@@ -68,7 +77,7 @@ export function handleDonationAdded(event: DonationAdded): void {
 export function handleIntegrationBalanceUpdated(
   event: IntegrationBalanceUpdated
 ): void {
-  let integration =  event.params.integration.toHex();
+  let integration = event.params.integration.toHex();
   let entity = Integration.load(integration);
 
   if (!entity) {
@@ -76,7 +85,14 @@ export function handleIntegrationBalanceUpdated(
     entity.balance = BigInt.fromI32(0);
   }
 
-  entity.balance = BigInt.fromI32(10);
+  // refactor to use BigInt
+  let entityBalance = entity.balance;
+  let eventAmount = event.params.amount;
+
+  let integrationBalance =
+    parseInt(`${entityBalance}`) + parseInt(`${eventAmount}`);
+
+  entity.balance = BigInt.fromI32(integrationBalance);
 
   entity.save();
 }
@@ -84,7 +100,6 @@ export function handleIntegrationBalanceUpdated(
 export function handleNonProfitAdded(event: NonProfitAdded): void {
   let nonProfit = event.params.nonProfit.toHex();
   let entity = NonProfit.load(nonProfit);
-  //let entity = NonProfit.load(event.transaction.from.toHex());
 
   if (entity == null) {
     entity = new NonProfit(nonProfit);
@@ -109,7 +124,7 @@ export function handleNonProfitRemoved(event: NonProfitRemoved): void {
 }
 
 export function handlePoolBalanceIncreased(event: PoolBalanceIncreased): void {
-  let idPromoter = event.transaction.from.toHex()
+  let idPromoter = event.transaction.from.toHex();
   let entity = Promoter.load(idPromoter);
 
   if (!entity) {
@@ -117,7 +132,14 @@ export function handlePoolBalanceIncreased(event: PoolBalanceIncreased): void {
     entity.totalDonated = BigInt.fromI32(0);
   }
 
-  entity.totalDonated = BigInt.fromI32(10);
+  // refactor to use BigInt
+  let entityBalance = entity.totalDonated;
+  let eventAmount = event.params.amount;
+
+  let entityTotalDonated =
+    parseInt(`${entityBalance}`) + parseInt(`${eventAmount}`);
+
+  entity.totalDonated = BigInt.fromI32(entityTotalDonated);
 
   entity.save();
 }
