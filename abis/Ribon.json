@@ -117,7 +117,11 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_amount", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
     ],
     "name": "addDonationPoolBalance",
     "outputs": [],
@@ -126,7 +130,11 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_nonProfit", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "_nonProfit",
+        "type": "address"
+      }
     ],
     "name": "addNonProfitToWhitelist",
     "outputs": [],
@@ -135,9 +143,21 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_nonProfit", "type": "address" },
-      { "internalType": "address", "name": "_user", "type": "address" },
-      { "internalType": "uint256", "name": "_amount", "type": "uint256" }
+      {
+        "internalType": "address",
+        "name": "_nonProfit",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
     ],
     "name": "donateThroughIntegration",
     "outputs": [],
@@ -147,7 +167,13 @@
   {
     "inputs": [],
     "name": "donationPoolBalance",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -155,67 +181,137 @@
     "inputs": [],
     "name": "donationToken",
     "outputs": [
-      { "internalType": "contract IERC20", "name": "", "type": "address" }
+      {
+        "internalType": "contract IERC20",
+        "name": "",
+        "type": "address"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_integration", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "_integration",
+        "type": "address"
+      }
     ],
     "name": "getIntegrationBalance",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "getIntegrationCouncil",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "integrationCouncil",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "name": "integrations",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_nonProfit", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "integrations",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_nonProfit",
+        "type": "address"
+      }
     ],
     "name": "isNonProfitOnWhitelist",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "nonProfitCouncil",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "name": "nonProfits",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_nonProfit", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "nonProfits",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_nonProfit",
+        "type": "address"
+      }
     ],
     "name": "removeNonProfitFromWhitelist",
     "outputs": [],
@@ -224,8 +320,16 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_integration", "type": "address" },
-      { "internalType": "uint256", "name": "_amount", "type": "uint256" }
+      {
+        "internalType": "address",
+        "name": "_integration",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
     ],
     "name": "updateIntegrationBalance",
     "outputs": [],
