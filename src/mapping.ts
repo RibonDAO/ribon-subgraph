@@ -21,6 +21,7 @@ export function handleDonationAdded(event: DonationAdded): void {
     event.params.integration.toHex() +
     event.params.nonProfit.toHex();
   let entity = DonationBalance.load(idDonation);
+  let integration = Integration.load(event.params.integration.toHex());
 
   if (!entity) {
     entity = new DonationBalance(idDonation);
@@ -28,6 +29,10 @@ export function handleDonationAdded(event: DonationAdded): void {
   }
 
   entity.totalDonated = entity.totalDonated.plus(event.params.amount);
+  
+  if (integration) {
+    integration.balance = integration.balance.minus(event.params.amount);
+  }
 
   entity.user = event.params.user;
   entity.integration = event.params.integration;
