@@ -6,7 +6,7 @@ dataSources:
     name: Ribon
     network: mumbai
     source:
-      address: "0x1B68da1C6FAfc10eDD0d724bC0c52928764a2c6f"
+      address: "0x93Db1426dAee2a1F0dD7dC5FDc3521d7e6A508Ba"
       abi: Ribon
     mapping:
       kind: ethereum/events
@@ -21,7 +21,7 @@ dataSources:
         - name: Ribon
           file: ./abis/Ribon.json
       eventHandlers:
-        - event: DonationAdded(address,address,address,uint256)
+        - event: DonationAdded(bytes32,address,address,uint256)
           handler: handleDonationAdded
         - event: IntegrationBalanceUpdated(address,uint256)
           handler: handleIntegrationBalanceUpdated

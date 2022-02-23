@@ -25,9 +25,9 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "address",
+        "internalType": "bytes32",
         "name": "user",
-        "type": "address"
+        "type": "bytes32"
       },
       {
         "indexed": false,
@@ -149,9 +149,9 @@
         "type": "address"
       },
       {
-        "internalType": "address",
+        "internalType": "bytes32",
         "name": "_user",
-        "type": "address"
+        "type": "bytes32"
       },
       {
         "internalType": "uint256",

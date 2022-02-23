@@ -23,8 +23,8 @@ export class DonationAdded__Params {
     this._event = event;
   }
 
-  get user(): Address {
-    return this._event.parameters[0].value.toAddress();
+  get user(): Bytes {
+    return this._event.parameters[0].value.toBytes();
   }
 
   get integration(): Address {
@@ -446,8 +446,8 @@ export class DonateThroughIntegrationCall__Inputs {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get _user(): Address {
-    return this._call.inputValues[1].value.toAddress();
+  get _user(): Bytes {
+    return this._call.inputValues[1].value.toBytes();
   }
 
   get _amount(): BigInt {
