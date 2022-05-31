@@ -40,16 +40,38 @@ export class DonationAdded__Params {
   }
 }
 
-export class IntegrationBalanceUpdated extends ethereum.Event {
-  get params(): IntegrationBalanceUpdated__Params {
-    return new IntegrationBalanceUpdated__Params(this);
+export class IntegrationBalanceAdded extends ethereum.Event {
+  get params(): IntegrationBalanceAdded__Params {
+    return new IntegrationBalanceAdded__Params(this);
   }
 }
 
-export class IntegrationBalanceUpdated__Params {
-  _event: IntegrationBalanceUpdated;
+export class IntegrationBalanceAdded__Params {
+  _event: IntegrationBalanceAdded;
 
-  constructor(event: IntegrationBalanceUpdated) {
+  constructor(event: IntegrationBalanceAdded) {
+    this._event = event;
+  }
+
+  get integration(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get amount(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+}
+
+export class IntegrationBalanceRemoved extends ethereum.Event {
+  get params(): IntegrationBalanceRemoved__Params {
+    return new IntegrationBalanceRemoved__Params(this);
+  }
+}
+
+export class IntegrationBalanceRemoved__Params {
+  _event: IntegrationBalanceRemoved;
+
+  constructor(event: IntegrationBalanceRemoved) {
     this._event = event;
   }
 
@@ -115,8 +137,12 @@ export class PoolBalanceIncreased__Params {
     return this._event.parameters[0].value.toAddress();
   }
 
+  get user(): Bytes {
+    return this._event.parameters[1].value.toBytes();
+  }
+
   get amount(): BigInt {
-    return this._event.parameters[1].value.toBigInt();
+    return this._event.parameters[2].value.toBigInt();
   }
 }
 
@@ -167,6 +193,29 @@ export class Ribon extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
+  getDonationPoolBalance(): BigInt {
+    let result = super.call(
+      "getDonationPoolBalance",
+      "getDonationPoolBalance():(uint256)",
+      []
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getDonationPoolBalance(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getDonationPoolBalance",
+      "getDonationPoolBalance():(uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
   getIntegrationBalance(_integration: Address): BigInt {
     let result = super.call(
       "getIntegrationBalance",
@@ -206,6 +255,52 @@ export class Ribon extends ethereum.SmartContract {
     let result = super.tryCall(
       "getIntegrationCouncil",
       "getIntegrationCouncil():(address)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  getNonProfitCouncil(): Address {
+    let result = super.call(
+      "getNonProfitCouncil",
+      "getNonProfitCouncil():(address)",
+      []
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_getNonProfitCouncil(): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "getNonProfitCouncil",
+      "getNonProfitCouncil():(address)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  governanceCouncil(): Address {
+    let result = super.call(
+      "governanceCouncil",
+      "governanceCouncil():(address)",
+      []
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_governanceCouncil(): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "governanceCouncil",
+      "governanceCouncil():(address)",
       []
     );
     if (result.reverted) {
@@ -348,12 +443,16 @@ export class ConstructorCall__Inputs {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get _integrationCouncil(): Address {
+  get _governanceCouncil(): Address {
     return this._call.inputValues[1].value.toAddress();
   }
 
-  get _nonProfitCouncil(): Address {
+  get _integrationCouncil(): Address {
     return this._call.inputValues[2].value.toAddress();
+  }
+
+  get _nonProfitCouncil(): Address {
+    return this._call.inputValues[3].value.toAddress();
   }
 }
 
@@ -385,12 +484,50 @@ export class AddDonationPoolBalanceCall__Inputs {
   get _amount(): BigInt {
     return this._call.inputValues[0].value.toBigInt();
   }
+
+  get _user(): Bytes {
+    return this._call.inputValues[1].value.toBytes();
+  }
 }
 
 export class AddDonationPoolBalanceCall__Outputs {
   _call: AddDonationPoolBalanceCall;
 
   constructor(call: AddDonationPoolBalanceCall) {
+    this._call = call;
+  }
+}
+
+export class AddIntegrationBalanceCall extends ethereum.Call {
+  get inputs(): AddIntegrationBalanceCall__Inputs {
+    return new AddIntegrationBalanceCall__Inputs(this);
+  }
+
+  get outputs(): AddIntegrationBalanceCall__Outputs {
+    return new AddIntegrationBalanceCall__Outputs(this);
+  }
+}
+
+export class AddIntegrationBalanceCall__Inputs {
+  _call: AddIntegrationBalanceCall;
+
+  constructor(call: AddIntegrationBalanceCall) {
+    this._call = call;
+  }
+
+  get _integration(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get _amount(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+}
+
+export class AddIntegrationBalanceCall__Outputs {
+  _call: AddIntegrationBalanceCall;
+
+  constructor(call: AddIntegrationBalanceCall) {
     this._call = call;
   }
 }
@@ -463,6 +600,40 @@ export class DonateThroughIntegrationCall__Outputs {
   }
 }
 
+export class RemoveIntegrationBalanceCall extends ethereum.Call {
+  get inputs(): RemoveIntegrationBalanceCall__Inputs {
+    return new RemoveIntegrationBalanceCall__Inputs(this);
+  }
+
+  get outputs(): RemoveIntegrationBalanceCall__Outputs {
+    return new RemoveIntegrationBalanceCall__Outputs(this);
+  }
+}
+
+export class RemoveIntegrationBalanceCall__Inputs {
+  _call: RemoveIntegrationBalanceCall;
+
+  constructor(call: RemoveIntegrationBalanceCall) {
+    this._call = call;
+  }
+
+  get _integration(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get _amount(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+}
+
+export class RemoveIntegrationBalanceCall__Outputs {
+  _call: RemoveIntegrationBalanceCall;
+
+  constructor(call: RemoveIntegrationBalanceCall) {
+    this._call = call;
+  }
+}
+
 export class RemoveNonProfitFromWhitelistCall extends ethereum.Call {
   get inputs(): RemoveNonProfitFromWhitelistCall__Inputs {
     return new RemoveNonProfitFromWhitelistCall__Inputs(this);
@@ -493,36 +664,88 @@ export class RemoveNonProfitFromWhitelistCall__Outputs {
   }
 }
 
-export class UpdateIntegrationBalanceCall extends ethereum.Call {
-  get inputs(): UpdateIntegrationBalanceCall__Inputs {
-    return new UpdateIntegrationBalanceCall__Inputs(this);
+export class SetIntegrationCouncilCall extends ethereum.Call {
+  get inputs(): SetIntegrationCouncilCall__Inputs {
+    return new SetIntegrationCouncilCall__Inputs(this);
   }
 
-  get outputs(): UpdateIntegrationBalanceCall__Outputs {
-    return new UpdateIntegrationBalanceCall__Outputs(this);
+  get outputs(): SetIntegrationCouncilCall__Outputs {
+    return new SetIntegrationCouncilCall__Outputs(this);
   }
 }
 
-export class UpdateIntegrationBalanceCall__Inputs {
-  _call: UpdateIntegrationBalanceCall;
+export class SetIntegrationCouncilCall__Inputs {
+  _call: SetIntegrationCouncilCall;
 
-  constructor(call: UpdateIntegrationBalanceCall) {
+  constructor(call: SetIntegrationCouncilCall) {
     this._call = call;
   }
 
-  get _integration(): Address {
+  get _integrationCouncil(): Address {
     return this._call.inputValues[0].value.toAddress();
-  }
-
-  get _amount(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
   }
 }
 
-export class UpdateIntegrationBalanceCall__Outputs {
-  _call: UpdateIntegrationBalanceCall;
+export class SetIntegrationCouncilCall__Outputs {
+  _call: SetIntegrationCouncilCall;
 
-  constructor(call: UpdateIntegrationBalanceCall) {
+  constructor(call: SetIntegrationCouncilCall) {
+    this._call = call;
+  }
+}
+
+export class SetNonProfitCouncilCall extends ethereum.Call {
+  get inputs(): SetNonProfitCouncilCall__Inputs {
+    return new SetNonProfitCouncilCall__Inputs(this);
+  }
+
+  get outputs(): SetNonProfitCouncilCall__Outputs {
+    return new SetNonProfitCouncilCall__Outputs(this);
+  }
+}
+
+export class SetNonProfitCouncilCall__Inputs {
+  _call: SetNonProfitCouncilCall;
+
+  constructor(call: SetNonProfitCouncilCall) {
+    this._call = call;
+  }
+
+  get _nonProfitCouncil(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class SetNonProfitCouncilCall__Outputs {
+  _call: SetNonProfitCouncilCall;
+
+  constructor(call: SetNonProfitCouncilCall) {
+    this._call = call;
+  }
+}
+
+export class TransferDonationPoolBalanceCall extends ethereum.Call {
+  get inputs(): TransferDonationPoolBalanceCall__Inputs {
+    return new TransferDonationPoolBalanceCall__Inputs(this);
+  }
+
+  get outputs(): TransferDonationPoolBalanceCall__Outputs {
+    return new TransferDonationPoolBalanceCall__Outputs(this);
+  }
+}
+
+export class TransferDonationPoolBalanceCall__Inputs {
+  _call: TransferDonationPoolBalanceCall;
+
+  constructor(call: TransferDonationPoolBalanceCall) {
+    this._call = call;
+  }
+}
+
+export class TransferDonationPoolBalanceCall__Outputs {
+  _call: TransferDonationPoolBalanceCall;
+
+  constructor(call: TransferDonationPoolBalanceCall) {
     this._call = call;
   }
 }

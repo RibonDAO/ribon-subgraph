@@ -2,7 +2,8 @@ import { BigInt } from "@graphprotocol/graph-ts";
 import {
   Ribon,
   DonationAdded,
-  IntegrationBalanceUpdated,
+  IntegrationBalanceAdded,
+  IntegrationBalanceRemoved,
   NonProfitAdded,
   NonProfitRemoved,
   PoolBalanceIncreased,
@@ -41,8 +42,8 @@ export function handleDonationAdded(event: DonationAdded): void {
   entity.save();
 }
 
-export function handleIntegrationBalanceUpdated(
-  event: IntegrationBalanceUpdated
+export function handleIntegrationBalanceAdded(
+  event: IntegrationBalanceAdded
 ): void {
   let integration = event.params.integration.toHex();
   let entity = Integration.load(integration);
@@ -53,6 +54,22 @@ export function handleIntegrationBalanceUpdated(
   }
 
   entity.balance = entity.balance.plus(event.params.amount);
+
+  entity.save();
+}
+
+export function handleIntegrationBalanceRemoved(
+  event: IntegrationBalanceRemoved
+): void {
+  let integration = event.params.integration.toHex();
+  let entity = Integration.load(integration);
+
+  if (!entity) {
+    entity = new Integration(integration);
+    entity.balance = BigInt.fromI32(0);
+  }
+
+  entity.balance = entity.balance.minus(event.params.amount);
 
   entity.save();
 }
@@ -84,7 +101,16 @@ export function handleNonProfitRemoved(event: NonProfitRemoved): void {
 }
 
 export function handlePoolBalanceIncreased(event: PoolBalanceIncreased): void {
-  let idPromoter = event.transaction.from.toHex();
+  const crypto_user = "0x0000000000000000000000000000000000000000000000000000000000000000";
+  let idPromoter: string;
+
+  if(event.params.user.toString() == crypto_user){
+    idPromoter = event.transaction.from.toHex();
+  } else {
+    idPromoter = event.params.user.toString();
+  }
+
+   
   let entity = Promoter.load(idPromoter);
 
   if (!entity) {

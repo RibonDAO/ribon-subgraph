@@ -8,6 +8,11 @@
       },
       {
         "internalType": "address",
+        "name": "_governanceCouncil",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
         "name": "_integrationCouncil",
         "type": "address"
       },
@@ -67,7 +72,26 @@
         "type": "uint256"
       }
     ],
-    "name": "IntegrationBalanceUpdated",
+    "name": "IntegrationBalanceAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "integration",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "IntegrationBalanceRemoved",
     "type": "event"
   },
   {
@@ -107,6 +131,12 @@
       },
       {
         "indexed": false,
+        "internalType": "bytes32",
+        "name": "user",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
         "internalType": "uint256",
         "name": "amount",
         "type": "uint256"
@@ -121,11 +151,34 @@
         "internalType": "uint256",
         "name": "_amount",
         "type": "uint256"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "_user",
+        "type": "bytes32"
       }
     ],
     "name": "addDonationPoolBalance",
     "outputs": [],
-    "stateMutability": "payable",
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_integration",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "addIntegrationBalance",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -161,7 +214,7 @@
     ],
     "name": "donateThroughIntegration",
     "outputs": [],
-    "stateMutability": "payable",
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -191,6 +244,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "getDonationPoolBalance",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -212,6 +278,32 @@
   {
     "inputs": [],
     "name": "getIntegrationCouncil",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getNonProfitCouncil",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "governanceCouncil",
     "outputs": [
       {
         "internalType": "address",
@@ -309,6 +401,24 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "_integration",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "removeIntegrationBalance",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "_nonProfit",
         "type": "address"
       }
@@ -322,16 +432,31 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_integration",
+        "name": "_integrationCouncil",
         "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
       }
     ],
-    "name": "updateIntegrationBalance",
+    "name": "setIntegrationCouncil",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_nonProfitCouncil",
+        "type": "address"
+      }
+    ],
+    "name": "setNonProfitCouncil",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "transferDonationPoolBalance",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
