@@ -216,3 +216,69 @@ export class DonationBalance extends Entity {
     this.set("totalDonated", Value.fromBigInt(value));
   }
 }
+
+export class PromoterDonation extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("user", Value.fromBytes(Bytes.empty()));
+    this.set("amountDonated", Value.fromBigInt(BigInt.zero()));
+    this.set("timestamp", Value.fromBigInt(BigInt.zero()));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save PromoterDonation entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save PromoterDonation entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("PromoterDonation", id.toString(), this);
+    }
+  }
+
+  static load(id: string): PromoterDonation | null {
+    return changetype<PromoterDonation | null>(
+      store.get("PromoterDonation", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get user(): Bytes {
+    let value = this.get("user");
+    return value!.toBytes();
+  }
+
+  set user(value: Bytes) {
+    this.set("user", Value.fromBytes(value));
+  }
+
+  get amountDonated(): BigInt {
+    let value = this.get("amountDonated");
+    return value!.toBigInt();
+  }
+
+  set amountDonated(value: BigInt) {
+    this.set("amountDonated", Value.fromBigInt(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value!.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
+}

@@ -13,10 +13,10 @@ import {
   Integration,
   Promoter,
   DonationBalance,
+  PromoterDonation,
 } from "../generated/schema";
 
 export function handleDonationAdded(event: DonationAdded): void {
-
   let idDonation =
     event.params.user.toHex() +
     event.params.integration.toHex() +
@@ -30,7 +30,7 @@ export function handleDonationAdded(event: DonationAdded): void {
   }
 
   entity.totalDonated = entity.totalDonated.plus(event.params.amount);
-  
+
   if (integration) {
     integration.balance = integration.balance.minus(event.params.amount);
   }
@@ -101,17 +101,24 @@ export function handleNonProfitRemoved(event: NonProfitRemoved): void {
 }
 
 export function handlePoolBalanceIncreased(event: PoolBalanceIncreased): void {
-  const crypto_user = "0x0000000000000000000000000000000000000000000000000000000000000000";
+  const crypto_user =
+    "0x0000000000000000000000000000000000000000000000000000000000000000";
   let idPromoter: string;
 
-  if(event.params.user.toString() == crypto_user){
+  if (event.params.user.toString() == crypto_user) {
     idPromoter = event.transaction.from.toHex();
   } else {
     idPromoter = event.params.user.toString();
   }
 
-   
   let entity = Promoter.load(idPromoter);
+
+  let entityPromoterDonation = new PromoterDonation(
+    event.transaction.hash.toHexString()
+  );
+  entityPromoterDonation.amountDonated = event.params.amount;
+  entityPromoterDonation.timestamp = event.block.timestamp;
+  entityPromoterDonation.user = event.transaction.from;
 
   if (!entity) {
     entity = new Promoter(idPromoter);
@@ -121,4 +128,6 @@ export function handlePoolBalanceIncreased(event: PoolBalanceIncreased): void {
   entity.totalDonated = entity.totalDonated.plus(event.params.amount);
 
   entity.save();
+
+  entityPromoterDonation.save();
 }

@@ -17,6 +17,7 @@ dataSources:
         - Integration
         - Promoter
         - DonationBalance
+        - PromoterDonation
       abis:
         - name: Ribon
           file: Ribon/abis/Ribon.json
