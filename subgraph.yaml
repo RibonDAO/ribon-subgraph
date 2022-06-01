@@ -6,7 +6,7 @@ dataSources:
     name: Ribon
     network: mumbai
     source:
-      address: "0xa9A9D9652894a8b51D82BA2aA7B1e4008A53FdD4"
+      address: "0x43955aD87eaC103635aE1CC0Ea77007cc08443F5"
       abi: Ribon
     mapping:
       kind: ethereum/events

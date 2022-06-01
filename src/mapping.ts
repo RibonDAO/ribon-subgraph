@@ -113,21 +113,21 @@ export function handlePoolBalanceIncreased(event: PoolBalanceIncreased): void {
 
   let entity = Promoter.load(idPromoter);
 
-  let entityPromoterDonation = new PromoterDonation(
-    event.transaction.hash.toHexString()
-  );
-  entityPromoterDonation.amountDonated = event.params.amount;
-  entityPromoterDonation.timestamp = event.block.timestamp;
-  entityPromoterDonation.user = event.transaction.from;
-
   if (!entity) {
     entity = new Promoter(idPromoter);
     entity.totalDonated = BigInt.fromI32(0);
   }
 
+  let entityPromoterDonation = new PromoterDonation(
+    event.transaction.hash.toHexString()
+  );
+
   entity.totalDonated = entity.totalDonated.plus(event.params.amount);
 
-  entity.save();
+  entityPromoterDonation.amountDonated = event.params.amount;
+  entityPromoterDonation.timestamp = event.block.timestamp;
+  entityPromoterDonation.user = event.transaction.from;
 
+  entity.save();
   entityPromoterDonation.save();
 }
