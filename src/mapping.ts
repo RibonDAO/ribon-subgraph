@@ -1,4 +1,4 @@
-import { BigInt } from "@graphprotocol/graph-ts";
+import { BigInt, Bytes } from "@graphprotocol/graph-ts";
 import {
   Ribon,
   DonationAdded,
@@ -104,11 +104,14 @@ export function handlePoolBalanceIncreased(event: PoolBalanceIncreased): void {
   const crypto_user =
     "0x0000000000000000000000000000000000000000000000000000000000000000";
   let idPromoter: string;
+  let user: string;
 
-  if (event.params.user.toString() == crypto_user) {
+  if (event.params.user.toHexString() == crypto_user) {
     idPromoter = event.transaction.from.toHex();
+    user = event.transaction.from.toHex();
   } else {
-    idPromoter = event.params.user.toString();
+    idPromoter = event.params.user.toHexString();
+    user = event.params.user.toHexString();
   }
 
   let entity = Promoter.load(idPromoter);
@@ -126,7 +129,7 @@ export function handlePoolBalanceIncreased(event: PoolBalanceIncreased): void {
 
   entityPromoterDonation.amountDonated = event.params.amount;
   entityPromoterDonation.timestamp = event.block.timestamp;
-  entityPromoterDonation.user = event.transaction.from;
+  entityPromoterDonation.user = user;
 
   entity.save();
   entityPromoterDonation.save();

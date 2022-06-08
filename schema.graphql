@@ -23,7 +23,7 @@ type DonationBalance @entity {
 
 type PromoterDonation @entity {
   id: ID!
-  user: Bytes!
+  user: String!
   amountDonated: BigInt!
   timestamp: BigInt!
 }
