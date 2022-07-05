@@ -101,23 +101,11 @@ export function handleNonProfitRemoved(event: NonProfitRemoved): void {
 }
 
 export function handlePoolBalanceIncreased(event: PoolBalanceIncreased): void {
-  const crypto_user =
-    "0x0000000000000000000000000000000000000000000000000000000000000000";
-  let idPromoter: string;
-  let user: string;
-
-  if (event.params.user.toHexString() == crypto_user) {
-    idPromoter = event.transaction.from.toHex();
-    user = event.transaction.from.toHex();
-  } else {
-    idPromoter = event.params.user.toHexString();
-    user = event.params.user.toHexString();
-  }
-
-  let entity = Promoter.load(idPromoter);
+  let promoter = event.params.promoter.toHex();
+  let entity = Promoter.load(promoter);
 
   if (!entity) {
-    entity = new Promoter(idPromoter);
+    entity = new Promoter(promoter);
     entity.totalDonated = BigInt.fromI32(0);
   }
 
@@ -129,7 +117,6 @@ export function handlePoolBalanceIncreased(event: PoolBalanceIncreased): void {
 
   entityPromoterDonation.amountDonated = event.params.amount;
   entityPromoterDonation.timestamp = event.block.timestamp;
-  entityPromoterDonation.user = user;
 
   entity.save();
   entityPromoterDonation.save();

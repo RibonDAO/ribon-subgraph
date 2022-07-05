@@ -40,6 +40,24 @@ export class DonationAdded__Params {
   }
 }
 
+export class DonationPoolBalanceTransfered extends ethereum.Event {
+  get params(): DonationPoolBalanceTransfered__Params {
+    return new DonationPoolBalanceTransfered__Params(this);
+  }
+}
+
+export class DonationPoolBalanceTransfered__Params {
+  _event: DonationPoolBalanceTransfered;
+
+  constructor(event: DonationPoolBalanceTransfered) {
+    this._event = event;
+  }
+
+  get amount(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+}
+
 export class IntegrationBalanceAdded extends ethereum.Event {
   get params(): IntegrationBalanceAdded__Params {
     return new IntegrationBalanceAdded__Params(this);
@@ -84,6 +102,24 @@ export class IntegrationBalanceRemoved__Params {
   }
 }
 
+export class IntegrationCouncilChanged extends ethereum.Event {
+  get params(): IntegrationCouncilChanged__Params {
+    return new IntegrationCouncilChanged__Params(this);
+  }
+}
+
+export class IntegrationCouncilChanged__Params {
+  _event: IntegrationCouncilChanged;
+
+  constructor(event: IntegrationCouncilChanged) {
+    this._event = event;
+  }
+
+  get integrationCouncil(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+}
+
 export class NonProfitAdded extends ethereum.Event {
   get params(): NonProfitAdded__Params {
     return new NonProfitAdded__Params(this);
@@ -98,6 +134,24 @@ export class NonProfitAdded__Params {
   }
 
   get nonProfit(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+}
+
+export class NonProfitCouncilChanged extends ethereum.Event {
+  get params(): NonProfitCouncilChanged__Params {
+    return new NonProfitCouncilChanged__Params(this);
+  }
+}
+
+export class NonProfitCouncilChanged__Params {
+  _event: NonProfitCouncilChanged;
+
+  constructor(event: NonProfitCouncilChanged) {
+    this._event = event;
+  }
+
+  get nonProfitCouncil(): Address {
     return this._event.parameters[0].value.toAddress();
   }
 }
@@ -137,12 +191,8 @@ export class PoolBalanceIncreased__Params {
     return this._event.parameters[0].value.toAddress();
   }
 
-  get user(): Bytes {
-    return this._event.parameters[1].value.toBytes();
-  }
-
   get amount(): BigInt {
-    return this._event.parameters[2].value.toBigInt();
+    return this._event.parameters[1].value.toBigInt();
   }
 }
 
@@ -184,100 +234,6 @@ export class Ribon extends ethereum.SmartContract {
     let result = super.tryCall(
       "donationToken",
       "donationToken():(address)",
-      []
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
-  }
-
-  getDonationPoolBalance(): BigInt {
-    let result = super.call(
-      "getDonationPoolBalance",
-      "getDonationPoolBalance():(uint256)",
-      []
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getDonationPoolBalance(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getDonationPoolBalance",
-      "getDonationPoolBalance():(uint256)",
-      []
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getIntegrationBalance(_integration: Address): BigInt {
-    let result = super.call(
-      "getIntegrationBalance",
-      "getIntegrationBalance(address):(uint256)",
-      [ethereum.Value.fromAddress(_integration)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getIntegrationBalance(
-    _integration: Address
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getIntegrationBalance",
-      "getIntegrationBalance(address):(uint256)",
-      [ethereum.Value.fromAddress(_integration)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getIntegrationCouncil(): Address {
-    let result = super.call(
-      "getIntegrationCouncil",
-      "getIntegrationCouncil():(address)",
-      []
-    );
-
-    return result[0].toAddress();
-  }
-
-  try_getIntegrationCouncil(): ethereum.CallResult<Address> {
-    let result = super.tryCall(
-      "getIntegrationCouncil",
-      "getIntegrationCouncil():(address)",
-      []
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
-  }
-
-  getNonProfitCouncil(): Address {
-    let result = super.call(
-      "getNonProfitCouncil",
-      "getNonProfitCouncil():(address)",
-      []
-    );
-
-    return result[0].toAddress();
-  }
-
-  try_getNonProfitCouncil(): ethereum.CallResult<Address> {
-    let result = super.tryCall(
-      "getNonProfitCouncil",
-      "getNonProfitCouncil():(address)",
       []
     );
     if (result.reverted) {
@@ -352,31 +308,6 @@ export class Ribon extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  isNonProfitOnWhitelist(_nonProfit: Address): boolean {
-    let result = super.call(
-      "isNonProfitOnWhitelist",
-      "isNonProfitOnWhitelist(address):(bool)",
-      [ethereum.Value.fromAddress(_nonProfit)]
-    );
-
-    return result[0].toBoolean();
-  }
-
-  try_isNonProfitOnWhitelist(
-    _nonProfit: Address
-  ): ethereum.CallResult<boolean> {
-    let result = super.tryCall(
-      "isNonProfitOnWhitelist",
-      "isNonProfitOnWhitelist(address):(bool)",
-      [ethereum.Value.fromAddress(_nonProfit)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
   nonProfitCouncil(): Address {
@@ -483,10 +414,6 @@ export class AddDonationPoolBalanceCall__Inputs {
 
   get _amount(): BigInt {
     return this._call.inputValues[0].value.toBigInt();
-  }
-
-  get _user(): Bytes {
-    return this._call.inputValues[1].value.toBytes();
   }
 }
 

@@ -222,7 +222,6 @@ export class PromoterDonation extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
-    this.set("user", Value.fromString(""));
     this.set("amountDonated", Value.fromBigInt(BigInt.zero()));
     this.set("timestamp", Value.fromBigInt(BigInt.zero()));
   }
@@ -253,15 +252,6 @@ export class PromoterDonation extends Entity {
 
   set id(value: string) {
     this.set("id", Value.fromString(value));
-  }
-
-  get user(): string {
-    let value = this.get("user");
-    return value!.toString();
-  }
-
-  set user(value: string) {
-    this.set("user", Value.fromString(value));
   }
 
   get amountDonated(): BigInt {
