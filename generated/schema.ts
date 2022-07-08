@@ -223,6 +223,7 @@ export class PromoterDonation extends Entity {
     this.set("id", Value.fromString(id));
 
     this.set("amountDonated", Value.fromBigInt(BigInt.zero()));
+    this.set("promoter", Value.fromBytes(Bytes.empty()));
     this.set("timestamp", Value.fromBigInt(BigInt.zero()));
   }
 
@@ -261,6 +262,15 @@ export class PromoterDonation extends Entity {
 
   set amountDonated(value: BigInt) {
     this.set("amountDonated", Value.fromBigInt(value));
+  }
+
+  get promoter(): Bytes {
+    let value = this.get("promoter");
+    return value!.toBytes();
+  }
+
+  set promoter(value: Bytes) {
+    this.set("promoter", Value.fromBytes(value));
   }
 
   get timestamp(): BigInt {

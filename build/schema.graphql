@@ -24,5 +24,6 @@ type DonationBalance @entity {
 type PromoterDonation @entity {
   id: ID!
   amountDonated: BigInt!
+  promoter: Bytes!
   timestamp: BigInt!
 }
