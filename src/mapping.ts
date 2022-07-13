@@ -117,6 +117,7 @@ export function handlePoolBalanceIncreased(event: PoolBalanceIncreased): void {
 
   entityPromoterDonation.amountDonated = event.params.amount;
   entityPromoterDonation.timestamp = event.block.timestamp;
+  entityPromoterDonation.promoter = event.params.promoter;
 
   entity.save();
   entityPromoterDonation.save();
