@@ -72,8 +72,6 @@ The deploy command will update your subgraph to the mumbai network
 yarn deploy
 ```
 
-### 💾 Back-End environments
-
 
 ## 🤝 Contributing
 
