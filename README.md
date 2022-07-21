@@ -56,6 +56,14 @@ To check the code and styles quality, use the following command:
 yarn lint
 ```
 
+### 🚀 Deploy
+
+Graph CLI generates AssemblyScript types from the subgraph's GraphQL schema and the contract ABIs included in the data sources.
+
+```shell
+yarn codegen
+```
+
 ### 🚀 Build
 
 The build command will update the subgraph.yaml with the mumbai configuration and then re-compile the subgraph
@@ -71,7 +79,6 @@ The deploy command will update your subgraph to the mumbai network
 ```shell
 yarn deploy
 ```
-
 
 ## 🤝 Contributing
 
