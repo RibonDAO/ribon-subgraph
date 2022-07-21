@@ -56,7 +56,7 @@ To check the code and styles quality, use the following command:
 yarn lint
 ```
 
-### 🚀 Deploy
+### 🚀 Codegen
 
 Graph CLI generates AssemblyScript types from the subgraph's GraphQL schema and the contract ABIs included in the data sources.
 
