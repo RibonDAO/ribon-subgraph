@@ -17,6 +17,7 @@ export class NonProfit extends Entity {
     this.set("id", Value.fromString(id));
 
     this.set("isNonProfitOnWhitelist", Value.fromBoolean(false));
+    this.set("pool", Value.fromString(""));
   }
 
   save(): void {
@@ -52,6 +53,15 @@ export class NonProfit extends Entity {
 
   set isNonProfitOnWhitelist(value: boolean) {
     this.set("isNonProfitOnWhitelist", Value.fromBoolean(value));
+  }
+
+  get pool(): string {
+    let value = this.get("pool");
+    return value!.toString();
+  }
+
+  set pool(value: string) {
+    this.set("pool", Value.fromString(value));
   }
 }
 
@@ -148,10 +158,11 @@ export class DonationBalance extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
-    this.set("user", Value.fromBytes(Bytes.empty()));
-    this.set("integration", Value.fromBytes(Bytes.empty()));
-    this.set("nonProfit", Value.fromBytes(Bytes.empty()));
+    this.set("promoter", Value.fromString(""));
+    this.set("integration", Value.fromString(""));
+    this.set("nonProfit", Value.fromString(""));
     this.set("totalDonated", Value.fromBigInt(BigInt.zero()));
+    this.set("pool", Value.fromString(""));
   }
 
   save(): void {
@@ -180,31 +191,31 @@ export class DonationBalance extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get user(): Bytes {
-    let value = this.get("user");
-    return value!.toBytes();
+  get promoter(): string {
+    let value = this.get("promoter");
+    return value!.toString();
   }
 
-  set user(value: Bytes) {
-    this.set("user", Value.fromBytes(value));
+  set promoter(value: string) {
+    this.set("promoter", Value.fromString(value));
   }
 
-  get integration(): Bytes {
+  get integration(): string {
     let value = this.get("integration");
-    return value!.toBytes();
+    return value!.toString();
   }
 
-  set integration(value: Bytes) {
-    this.set("integration", Value.fromBytes(value));
+  set integration(value: string) {
+    this.set("integration", Value.fromString(value));
   }
 
-  get nonProfit(): Bytes {
+  get nonProfit(): string {
     let value = this.get("nonProfit");
-    return value!.toBytes();
+    return value!.toString();
   }
 
-  set nonProfit(value: Bytes) {
-    this.set("nonProfit", Value.fromBytes(value));
+  set nonProfit(value: string) {
+    this.set("nonProfit", Value.fromString(value));
   }
 
   get totalDonated(): BigInt {
@@ -215,6 +226,15 @@ export class DonationBalance extends Entity {
   set totalDonated(value: BigInt) {
     this.set("totalDonated", Value.fromBigInt(value));
   }
+
+  get pool(): string {
+    let value = this.get("pool");
+    return value!.toString();
+  }
+
+  set pool(value: string) {
+    this.set("pool", Value.fromString(value));
+  }
 }
 
 export class PromoterDonation extends Entity {
@@ -223,8 +243,9 @@ export class PromoterDonation extends Entity {
     this.set("id", Value.fromString(id));
 
     this.set("amountDonated", Value.fromBigInt(BigInt.zero()));
-    this.set("promoter", Value.fromBytes(Bytes.empty()));
+    this.set("promoter", Value.fromString(""));
     this.set("timestamp", Value.fromBigInt(BigInt.zero()));
+    this.set("pool", Value.fromString(""));
   }
 
   save(): void {
@@ -264,13 +285,13 @@ export class PromoterDonation extends Entity {
     this.set("amountDonated", Value.fromBigInt(value));
   }
 
-  get promoter(): Bytes {
+  get promoter(): string {
     let value = this.get("promoter");
-    return value!.toBytes();
+    return value!.toString();
   }
 
-  set promoter(value: Bytes) {
-    this.set("promoter", Value.fromBytes(value));
+  set promoter(value: string) {
+    this.set("promoter", Value.fromString(value));
   }
 
   get timestamp(): BigInt {
@@ -280,5 +301,88 @@ export class PromoterDonation extends Entity {
 
   set timestamp(value: BigInt) {
     this.set("timestamp", Value.fromBigInt(value));
+  }
+
+  get pool(): string {
+    let value = this.get("pool");
+    return value!.toString();
+  }
+
+  set pool(value: string) {
+    this.set("pool", Value.fromString(value));
+  }
+}
+
+export class Pool extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("promoter", Value.fromString(""));
+    this.set("integration", Value.fromString(""));
+    this.set("nonProfit", Value.fromString(""));
+    this.set("balance", Value.fromBigInt(BigInt.zero()));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Pool entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save Pool entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("Pool", id.toString(), this);
+    }
+  }
+
+  static load(id: string): Pool | null {
+    return changetype<Pool | null>(store.get("Pool", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get promoter(): string {
+    let value = this.get("promoter");
+    return value!.toString();
+  }
+
+  set promoter(value: string) {
+    this.set("promoter", Value.fromString(value));
+  }
+
+  get integration(): string {
+    let value = this.get("integration");
+    return value!.toString();
+  }
+
+  set integration(value: string) {
+    this.set("integration", Value.fromString(value));
+  }
+
+  get nonProfit(): string {
+    let value = this.get("nonProfit");
+    return value!.toString();
+  }
+
+  set nonProfit(value: string) {
+    this.set("nonProfit", Value.fromString(value));
+  }
+
+  get balance(): BigInt {
+    let value = this.get("balance");
+    return value!.toBigInt();
+  }
+
+  set balance(value: BigInt) {
+    this.set("balance", Value.fromBigInt(value));
   }
 }

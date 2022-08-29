@@ -19,6 +19,7 @@ type DonationBalance @entity {
   integration: Bytes!
   nonProfit: Bytes!
   totalDonated: BigInt!
+  pool: Bytes!
 }
 
 type PromoterDonation @entity {
@@ -26,4 +27,9 @@ type PromoterDonation @entity {
   amountDonated: BigInt!
   promoter: Bytes!
   timestamp: BigInt!
+}
+
+type Pool @entity {
+  id: ID!
+  balance: BigInt!
 }
