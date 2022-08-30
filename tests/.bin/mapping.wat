@@ -3376,8 +3376,6 @@
     end)
   (func $start:tests/mapping.test~anonymous|0~anonymous|3~anonymous|0 (type 0)
     (local i32 i32 i32 i32 i32 i32 i32 i64)
-    call $tests/utils/createNewNonProfitAddedEvent
-    call $src/mapping/handleNonProfitAdded
     call $~lib/matchstick-as/assembly/defaults/newMockEvent
     local.tee 0
     i32.load
@@ -3510,6 +3508,8 @@
     call $generated/schema/Integration#set:balance
     local.get 0
     call $generated/schema/Pool#save
+    call $tests/utils/createNewNonProfitAddedEvent
+    call $src/mapping/handleNonProfitAdded
     i32.const 6880
     i32.const 2320
     i32.const 3024

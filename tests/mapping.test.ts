@@ -151,11 +151,10 @@ describe("Manager", () => {
       let pool = "0x026b2ed6b34c98f6624b448865642056d04d730c";
       let nonProfit = "0xf20c382d2a95eb19f9164435aed59e5c59bc1fd9";
 
-      let newNonProfitEvent = createNewNonProfitAddedEvent(pool, nonProfit);
-      handleNonProfitAdded(newNonProfitEvent);
-
       let newEntityEvent = createNewPoolCreatedEvent(pool, token);
       handlePoolCreated(newEntityEvent);
+      let newNonProfitEvent = createNewNonProfitAddedEvent(pool, nonProfit);
+      handleNonProfitAdded(newNonProfitEvent);
 
       assert.fieldEquals("Pool", pool, "id", pool);
       assert.fieldEquals("Pool", pool, "balance", "0");
