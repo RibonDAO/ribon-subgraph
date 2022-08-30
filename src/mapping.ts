@@ -8,6 +8,7 @@ import {
   NonProfitRemoved,
   PoolBalanceIncreased,
   PoolCreated,
+  PoolBalanceTransfered,
 } from "../generated/Manager/Manager";
 import {
   NonProfit,
@@ -97,14 +98,11 @@ export function handleNonProfitRemoved(event: NonProfitRemoved): void {
   let nonProfit = event.params.nonProfit.toHex();
   let entity = NonProfit.load(nonProfit);
 
-  if (!entity) {
-    entity = new NonProfit(nonProfit);
+  if (entity) {
+    entity.isNonProfitOnWhitelist = false;
+    entity.pool = event.params.pool.toHex();
+    entity.save();
   }
-
-  entity.isNonProfitOnWhitelist = false;
-  entity.pool = event.params.pool.toHex();
-
-  entity.save();
 }
 
 export function handlePoolCreated(event: PoolCreated): void {
@@ -122,7 +120,14 @@ export function handlePoolCreated(event: PoolCreated): void {
 
 export function handlePoolBalanceIncreased(event: PoolBalanceIncreased): void {
   let promoter = event.params.promoter.toHex();
+  let pool = event.params.pool.toHex();
   let entity = Promoter.load(promoter);
+  let entityPool = Pool.load(pool);
+
+  if (entityPool) {
+    entityPool.balance = entityPool.balance.plus(event.params.amount);
+    entityPool.save();
+  }
 
   if (!entity) {
     entity = new Promoter(promoter);
@@ -137,8 +142,21 @@ export function handlePoolBalanceIncreased(event: PoolBalanceIncreased): void {
   entityPromoterDonation.amountDonated = event.params.amount;
   entityPromoterDonation.timestamp = event.block.timestamp;
   entityPromoterDonation.promoter = event.params.promoter.toHex();
-  entityPromoterDonation.pool = event.params.pool.toHex();
+  entityPromoterDonation.pool = pool;
 
   entity.save();
   entityPromoterDonation.save();
+}
+
+export function handlePoolBalanceTransfered(
+  event: PoolBalanceTransfered
+): void {
+  let pool = event.params.pool.toHex();
+  let wallet = event.params.wallet.toHex();
+  let entity = Pool.load(pool);
+
+  if (entity) {
+    entity.balance = BigInt.fromI32(0);
+    entity.save();
+  }
 }
