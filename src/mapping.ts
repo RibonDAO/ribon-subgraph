@@ -70,14 +70,10 @@ export function handleIntegrationBalanceRemoved(
   let integration = event.params.integration.toHex();
   let entity = Integration.load(integration);
 
-  if (!entity) {
-    entity = new Integration(integration);
-    entity.balance = BigInt.fromI32(0);
+  if (entity) {
+    entity.balance = entity.balance.minus(event.params.amount);
+    entity.save();
   }
-
-  entity.balance = entity.balance.minus(event.params.amount);
-
-  entity.save();
 }
 
 export function handleNonProfitAdded(event: NonProfitAdded): void {
@@ -107,12 +103,7 @@ export function handleNonProfitRemoved(event: NonProfitRemoved): void {
 
 export function handlePoolCreated(event: PoolCreated): void {
   let pool = event.params.pool.toHex();
-  let entity = Pool.load(pool);
-
-  if (!entity) {
-    entity = new Pool(pool);
-  }
-
+  let entity = new Pool(pool);
   entity.balance = BigInt.fromI32(0);
 
   entity.save();
