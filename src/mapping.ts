@@ -19,30 +19,30 @@ import {
 } from "../generated/schema";
 
 export function handleDonationAdded(event: DonationAdded): void {
-  let idDonation = event.params.pool.toHex();
-  let entity = Pool.load(idDonation);
+  let idDonation =
+    event.params.user.toHex() +
+    event.params.integration.toHex() +
+    event.params.nonProfit.toHex() +
+    event.params.pool.toHex();
+  let entity = DonationBalance.load(idDonation);
   let integration = Integration.load(event.params.integration.toHex());
 
   if (!entity) {
-    entity = new Pool(idDonation);
-    entity.balance = BigInt.fromI32(0);
+    entity = new DonationBalance(idDonation);
+    entity.totalDonated = BigInt.fromI32(0);
   }
 
-  entity.balance = entity.balance.plus(event.params.amount);
+  entity.totalDonated = entity.totalDonated.plus(event.params.amount);
 
   if (integration) {
     integration.balance = integration.balance.minus(event.params.amount);
     entity.integration = integration.id;
   }
 
-  let promoter = Promoter.load(event.params.user.toHex());
-  if (!promoter) {
-    promoter = new Promoter(event.params.user.toHex());
-    promoter.totalDonated = BigInt.fromI32(0);
-  }
-
-  entity.promoter = promoter.id;
+  entity.user = event.params.user;
+  entity.integration = event.params.integration.toHex();
   entity.nonProfit = event.params.nonProfit.toHex();
+  entity.pool = event.params.pool.toHex();
 
   entity.save();
 }

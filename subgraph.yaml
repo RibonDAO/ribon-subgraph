@@ -6,7 +6,7 @@ dataSources:
     name: Manager
     network: mumbai
     source:
-      address: "0xF7911E394Ff58A4db1F6D508ADD2ccB91c70E049"
+      address: "0x411DF13350D6aB065Fc2d1Fd026b6d7f4133e9Df"
       abi: Manager
     mapping:
       kind: ethereum/events
