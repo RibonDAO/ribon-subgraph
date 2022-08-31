@@ -1,8 +1,3 @@
-type NonProfit @entity {
-  id: ID!
-  isNonProfitOnWhitelist: Boolean!
-}
-
 type Integration @entity {
   id: ID!
   balance: BigInt!
@@ -13,17 +8,31 @@ type Promoter @entity {
   totalDonated: BigInt!
 }
 
+type NonProfit @entity {
+  id: ID!
+  isNonProfitOnWhitelist: Boolean!
+  pool: Pool!
+}
+
+type Pool @entity {
+  id: ID!
+  balance: BigInt!
+  nonProfits: [NonProfit!]! @derivedFrom(field: "pool")
+}
+
 type DonationBalance @entity {
   id: ID!
   user: Bytes!
-  integration: Bytes!
-  nonProfit: Bytes!
+  integration: Integration!
+  nonProfit: NonProfit!
   totalDonated: BigInt!
+  pool: Pool!
 }
 
 type PromoterDonation @entity {
   id: ID!
   amountDonated: BigInt!
-  promoter: Bytes!
+  promoter: Promoter!
   timestamp: BigInt!
+  pool: Pool!
 }

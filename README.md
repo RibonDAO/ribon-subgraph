@@ -39,9 +39,11 @@ In order to run the project from a local environment we need `node>=16`, `npm>=8
 ## 🖥️ Local development
 
 To clone the repo:
+
 ```shell
 git clone git@github.com:RibonDAO/ribon-subgraph.git
 ```
+
 To install the application:
 
 ```shell
@@ -56,13 +58,20 @@ To check the code and styles quality, use the following command:
 yarn lint
 ```
 
+### 🚀 Test
+
+To check the unit tests, use the following command
+
+````shell
+yarn test
+
 ### 🚀 Codegen
 
 Graph CLI generates AssemblyScript types from the subgraph's GraphQL schema and the contract ABIs included in the data sources.
 
 ```shell
 yarn codegen
-```
+````
 
 ### 🚀 Build
 

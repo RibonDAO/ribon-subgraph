@@ -3,11 +3,6 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_donationToken",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
         "name": "_governanceCouncil",
         "type": "address"
       },
@@ -28,6 +23,12 @@
   {
     "anonymous": false,
     "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "pool",
+        "type": "address"
+      },
       {
         "indexed": false,
         "internalType": "bytes32",
@@ -61,12 +62,12 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
+        "internalType": "address",
+        "name": "governanceCouncil",
+        "type": "address"
       }
     ],
-    "name": "DonationPoolBalanceTransfered",
+    "name": "GovernanceCouncilChanged",
     "type": "event"
   },
   {
@@ -126,6 +127,12 @@
       {
         "indexed": false,
         "internalType": "address",
+        "name": "pool",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
         "name": "nonProfit",
         "type": "address"
       }
@@ -152,6 +159,12 @@
       {
         "indexed": false,
         "internalType": "address",
+        "name": "pool",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
         "name": "nonProfit",
         "type": "address"
       }
@@ -170,6 +183,12 @@
       },
       {
         "indexed": false,
+        "internalType": "address",
+        "name": "pool",
+        "type": "address"
+      },
+      {
+        "indexed": false,
         "internalType": "uint256",
         "name": "amount",
         "type": "uint256"
@@ -179,17 +198,42 @@
     "type": "event"
   },
   {
+    "anonymous": false,
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
+        "indexed": false,
+        "internalType": "address",
+        "name": "pool",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "wallet",
+        "type": "address"
       }
     ],
-    "name": "addDonationPoolBalance",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    "name": "PoolBalanceTransfered",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "pool",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      }
+    ],
+    "name": "PoolCreated",
+    "type": "event"
   },
   {
     "inputs": [
@@ -213,6 +257,11 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "_pool",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
         "name": "_nonProfit",
         "type": "address"
       }
@@ -224,6 +273,42 @@
   },
   {
     "inputs": [
+      {
+        "internalType": "address",
+        "name": "_pool",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "addPoolBalance",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      }
+    ],
+    "name": "createPool",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_pool",
+        "type": "address"
+      },
       {
         "internalType": "address",
         "name": "_nonProfit",
@@ -246,26 +331,29 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "donationPoolBalance",
-    "outputs": [
+    "inputs": [
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "_index",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_length",
         "type": "uint256"
       }
     ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "donationToken",
+    "name": "fetchPools",
     "outputs": [
       {
-        "internalType": "contract IERC20",
-        "name": "",
-        "type": "address"
+        "internalType": "address[]",
+        "name": "_pools",
+        "type": "address[]"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_newIndex",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -332,17 +420,17 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "pools",
+    "outputs": [
+      {
         "internalType": "address",
         "name": "",
         "type": "address"
-      }
-    ],
-    "name": "nonProfits",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
       }
     ],
     "stateMutability": "view",
@@ -370,11 +458,29 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "_pool",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
         "name": "_nonProfit",
         "type": "address"
       }
     ],
     "name": "removeNonProfitFromWhitelist",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_governanceCouncil",
+        "type": "address"
+      }
+    ],
+    "name": "setGovernanceCouncil",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -406,8 +512,19 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "transferDonationPoolBalance",
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_pool",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_wallet",
+        "type": "address"
+      }
+    ],
+    "name": "transferPoolBalance",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

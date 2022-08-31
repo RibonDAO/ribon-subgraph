@@ -23,38 +23,42 @@ export class DonationAdded__Params {
     this._event = event;
   }
 
+  get pool(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
   get user(): Bytes {
-    return this._event.parameters[0].value.toBytes();
+    return this._event.parameters[1].value.toBytes();
   }
 
   get integration(): Address {
-    return this._event.parameters[1].value.toAddress();
-  }
-
-  get nonProfit(): Address {
     return this._event.parameters[2].value.toAddress();
   }
 
+  get nonProfit(): Address {
+    return this._event.parameters[3].value.toAddress();
+  }
+
   get amount(): BigInt {
-    return this._event.parameters[3].value.toBigInt();
+    return this._event.parameters[4].value.toBigInt();
   }
 }
 
-export class DonationPoolBalanceTransfered extends ethereum.Event {
-  get params(): DonationPoolBalanceTransfered__Params {
-    return new DonationPoolBalanceTransfered__Params(this);
+export class GovernanceCouncilChanged extends ethereum.Event {
+  get params(): GovernanceCouncilChanged__Params {
+    return new GovernanceCouncilChanged__Params(this);
   }
 }
 
-export class DonationPoolBalanceTransfered__Params {
-  _event: DonationPoolBalanceTransfered;
+export class GovernanceCouncilChanged__Params {
+  _event: GovernanceCouncilChanged;
 
-  constructor(event: DonationPoolBalanceTransfered) {
+  constructor(event: GovernanceCouncilChanged) {
     this._event = event;
   }
 
-  get amount(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
+  get governanceCouncil(): Address {
+    return this._event.parameters[0].value.toAddress();
   }
 }
 
@@ -133,8 +137,12 @@ export class NonProfitAdded__Params {
     this._event = event;
   }
 
-  get nonProfit(): Address {
+  get pool(): Address {
     return this._event.parameters[0].value.toAddress();
+  }
+
+  get nonProfit(): Address {
+    return this._event.parameters[1].value.toAddress();
   }
 }
 
@@ -169,8 +177,12 @@ export class NonProfitRemoved__Params {
     this._event = event;
   }
 
-  get nonProfit(): Address {
+  get pool(): Address {
     return this._event.parameters[0].value.toAddress();
+  }
+
+  get nonProfit(): Address {
+    return this._event.parameters[1].value.toAddress();
   }
 }
 
@@ -191,56 +203,119 @@ export class PoolBalanceIncreased__Params {
     return this._event.parameters[0].value.toAddress();
   }
 
+  get pool(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+
   get amount(): BigInt {
-    return this._event.parameters[1].value.toBigInt();
+    return this._event.parameters[2].value.toBigInt();
   }
 }
 
-export class Ribon extends ethereum.SmartContract {
-  static bind(address: Address): Ribon {
-    return new Ribon("Ribon", address);
+export class PoolBalanceTransfered extends ethereum.Event {
+  get params(): PoolBalanceTransfered__Params {
+    return new PoolBalanceTransfered__Params(this);
+  }
+}
+
+export class PoolBalanceTransfered__Params {
+  _event: PoolBalanceTransfered;
+
+  constructor(event: PoolBalanceTransfered) {
+    this._event = event;
   }
 
-  donationPoolBalance(): BigInt {
+  get pool(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get wallet(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+}
+
+export class PoolCreated extends ethereum.Event {
+  get params(): PoolCreated__Params {
+    return new PoolCreated__Params(this);
+  }
+}
+
+export class PoolCreated__Params {
+  _event: PoolCreated;
+
+  constructor(event: PoolCreated) {
+    this._event = event;
+  }
+
+  get pool(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get token(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+}
+
+export class Manager__fetchPoolsResult {
+  value0: Array<Address>;
+  value1: BigInt;
+
+  constructor(value0: Array<Address>, value1: BigInt) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromAddressArray(this.value0));
+    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
+    return map;
+  }
+}
+
+export class Manager extends ethereum.SmartContract {
+  static bind(address: Address): Manager {
+    return new Manager("Manager", address);
+  }
+
+  fetchPools(_index: BigInt, _length: BigInt): Manager__fetchPoolsResult {
     let result = super.call(
-      "donationPoolBalance",
-      "donationPoolBalance():(uint256)",
-      []
+      "fetchPools",
+      "fetchPools(uint256,uint256):(address[],uint256)",
+      [
+        ethereum.Value.fromUnsignedBigInt(_index),
+        ethereum.Value.fromUnsignedBigInt(_length)
+      ]
     );
 
-    return result[0].toBigInt();
+    return new Manager__fetchPoolsResult(
+      result[0].toAddressArray(),
+      result[1].toBigInt()
+    );
   }
 
-  try_donationPoolBalance(): ethereum.CallResult<BigInt> {
+  try_fetchPools(
+    _index: BigInt,
+    _length: BigInt
+  ): ethereum.CallResult<Manager__fetchPoolsResult> {
     let result = super.tryCall(
-      "donationPoolBalance",
-      "donationPoolBalance():(uint256)",
-      []
+      "fetchPools",
+      "fetchPools(uint256,uint256):(address[],uint256)",
+      [
+        ethereum.Value.fromUnsignedBigInt(_index),
+        ethereum.Value.fromUnsignedBigInt(_length)
+      ]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  donationToken(): Address {
-    let result = super.call("donationToken", "donationToken():(address)", []);
-
-    return result[0].toAddress();
-  }
-
-  try_donationToken(): ethereum.CallResult<Address> {
-    let result = super.tryCall(
-      "donationToken",
-      "donationToken():(address)",
-      []
+    return ethereum.CallResult.fromValue(
+      new Manager__fetchPoolsResult(
+        value[0].toAddressArray(),
+        value[1].toBigInt()
+      )
     );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
   governanceCouncil(): Address {
@@ -333,23 +408,23 @@ export class Ribon extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
-  nonProfits(param0: Address): boolean {
-    let result = super.call("nonProfits", "nonProfits(address):(bool)", [
-      ethereum.Value.fromAddress(param0)
+  pools(param0: BigInt): Address {
+    let result = super.call("pools", "pools(uint256):(address)", [
+      ethereum.Value.fromUnsignedBigInt(param0)
     ]);
 
-    return result[0].toBoolean();
+    return result[0].toAddress();
   }
 
-  try_nonProfits(param0: Address): ethereum.CallResult<boolean> {
-    let result = super.tryCall("nonProfits", "nonProfits(address):(bool)", [
-      ethereum.Value.fromAddress(param0)
+  try_pools(param0: BigInt): ethereum.CallResult<Address> {
+    let result = super.tryCall("pools", "pools(uint256):(address)", [
+      ethereum.Value.fromUnsignedBigInt(param0)
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
+    return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 }
 
@@ -370,20 +445,16 @@ export class ConstructorCall__Inputs {
     this._call = call;
   }
 
-  get _donationToken(): Address {
+  get _governanceCouncil(): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get _governanceCouncil(): Address {
+  get _integrationCouncil(): Address {
     return this._call.inputValues[1].value.toAddress();
   }
 
-  get _integrationCouncil(): Address {
-    return this._call.inputValues[2].value.toAddress();
-  }
-
   get _nonProfitCouncil(): Address {
-    return this._call.inputValues[3].value.toAddress();
+    return this._call.inputValues[2].value.toAddress();
   }
 }
 
@@ -391,36 +462,6 @@ export class ConstructorCall__Outputs {
   _call: ConstructorCall;
 
   constructor(call: ConstructorCall) {
-    this._call = call;
-  }
-}
-
-export class AddDonationPoolBalanceCall extends ethereum.Call {
-  get inputs(): AddDonationPoolBalanceCall__Inputs {
-    return new AddDonationPoolBalanceCall__Inputs(this);
-  }
-
-  get outputs(): AddDonationPoolBalanceCall__Outputs {
-    return new AddDonationPoolBalanceCall__Outputs(this);
-  }
-}
-
-export class AddDonationPoolBalanceCall__Inputs {
-  _call: AddDonationPoolBalanceCall;
-
-  constructor(call: AddDonationPoolBalanceCall) {
-    this._call = call;
-  }
-
-  get _amount(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-}
-
-export class AddDonationPoolBalanceCall__Outputs {
-  _call: AddDonationPoolBalanceCall;
-
-  constructor(call: AddDonationPoolBalanceCall) {
     this._call = call;
   }
 }
@@ -476,8 +517,12 @@ export class AddNonProfitToWhitelistCall__Inputs {
     this._call = call;
   }
 
-  get _nonProfit(): Address {
+  get _pool(): Address {
     return this._call.inputValues[0].value.toAddress();
+  }
+
+  get _nonProfit(): Address {
+    return this._call.inputValues[1].value.toAddress();
   }
 }
 
@@ -485,6 +530,70 @@ export class AddNonProfitToWhitelistCall__Outputs {
   _call: AddNonProfitToWhitelistCall;
 
   constructor(call: AddNonProfitToWhitelistCall) {
+    this._call = call;
+  }
+}
+
+export class AddPoolBalanceCall extends ethereum.Call {
+  get inputs(): AddPoolBalanceCall__Inputs {
+    return new AddPoolBalanceCall__Inputs(this);
+  }
+
+  get outputs(): AddPoolBalanceCall__Outputs {
+    return new AddPoolBalanceCall__Outputs(this);
+  }
+}
+
+export class AddPoolBalanceCall__Inputs {
+  _call: AddPoolBalanceCall;
+
+  constructor(call: AddPoolBalanceCall) {
+    this._call = call;
+  }
+
+  get _pool(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get _amount(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+}
+
+export class AddPoolBalanceCall__Outputs {
+  _call: AddPoolBalanceCall;
+
+  constructor(call: AddPoolBalanceCall) {
+    this._call = call;
+  }
+}
+
+export class CreatePoolCall extends ethereum.Call {
+  get inputs(): CreatePoolCall__Inputs {
+    return new CreatePoolCall__Inputs(this);
+  }
+
+  get outputs(): CreatePoolCall__Outputs {
+    return new CreatePoolCall__Outputs(this);
+  }
+}
+
+export class CreatePoolCall__Inputs {
+  _call: CreatePoolCall;
+
+  constructor(call: CreatePoolCall) {
+    this._call = call;
+  }
+
+  get _token(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class CreatePoolCall__Outputs {
+  _call: CreatePoolCall;
+
+  constructor(call: CreatePoolCall) {
     this._call = call;
   }
 }
@@ -506,16 +615,20 @@ export class DonateThroughIntegrationCall__Inputs {
     this._call = call;
   }
 
-  get _nonProfit(): Address {
+  get _pool(): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 
+  get _nonProfit(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+
   get _user(): Bytes {
-    return this._call.inputValues[1].value.toBytes();
+    return this._call.inputValues[2].value.toBytes();
   }
 
   get _amount(): BigInt {
-    return this._call.inputValues[2].value.toBigInt();
+    return this._call.inputValues[3].value.toBigInt();
   }
 }
 
@@ -578,8 +691,12 @@ export class RemoveNonProfitFromWhitelistCall__Inputs {
     this._call = call;
   }
 
-  get _nonProfit(): Address {
+  get _pool(): Address {
     return this._call.inputValues[0].value.toAddress();
+  }
+
+  get _nonProfit(): Address {
+    return this._call.inputValues[1].value.toAddress();
   }
 }
 
@@ -587,6 +704,36 @@ export class RemoveNonProfitFromWhitelistCall__Outputs {
   _call: RemoveNonProfitFromWhitelistCall;
 
   constructor(call: RemoveNonProfitFromWhitelistCall) {
+    this._call = call;
+  }
+}
+
+export class SetGovernanceCouncilCall extends ethereum.Call {
+  get inputs(): SetGovernanceCouncilCall__Inputs {
+    return new SetGovernanceCouncilCall__Inputs(this);
+  }
+
+  get outputs(): SetGovernanceCouncilCall__Outputs {
+    return new SetGovernanceCouncilCall__Outputs(this);
+  }
+}
+
+export class SetGovernanceCouncilCall__Inputs {
+  _call: SetGovernanceCouncilCall;
+
+  constructor(call: SetGovernanceCouncilCall) {
+    this._call = call;
+  }
+
+  get _governanceCouncil(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class SetGovernanceCouncilCall__Outputs {
+  _call: SetGovernanceCouncilCall;
+
+  constructor(call: SetGovernanceCouncilCall) {
     this._call = call;
   }
 }
@@ -651,28 +798,36 @@ export class SetNonProfitCouncilCall__Outputs {
   }
 }
 
-export class TransferDonationPoolBalanceCall extends ethereum.Call {
-  get inputs(): TransferDonationPoolBalanceCall__Inputs {
-    return new TransferDonationPoolBalanceCall__Inputs(this);
+export class TransferPoolBalanceCall extends ethereum.Call {
+  get inputs(): TransferPoolBalanceCall__Inputs {
+    return new TransferPoolBalanceCall__Inputs(this);
   }
 
-  get outputs(): TransferDonationPoolBalanceCall__Outputs {
-    return new TransferDonationPoolBalanceCall__Outputs(this);
+  get outputs(): TransferPoolBalanceCall__Outputs {
+    return new TransferPoolBalanceCall__Outputs(this);
   }
 }
 
-export class TransferDonationPoolBalanceCall__Inputs {
-  _call: TransferDonationPoolBalanceCall;
+export class TransferPoolBalanceCall__Inputs {
+  _call: TransferPoolBalanceCall;
 
-  constructor(call: TransferDonationPoolBalanceCall) {
+  constructor(call: TransferPoolBalanceCall) {
     this._call = call;
   }
+
+  get _pool(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get _wallet(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
 }
 
-export class TransferDonationPoolBalanceCall__Outputs {
-  _call: TransferDonationPoolBalanceCall;
+export class TransferPoolBalanceCall__Outputs {
+  _call: TransferPoolBalanceCall;
 
-  constructor(call: TransferDonationPoolBalanceCall) {
+  constructor(call: TransferPoolBalanceCall) {
     this._call = call;
   }
 }
