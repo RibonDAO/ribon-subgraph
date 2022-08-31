@@ -75,7 +75,7 @@ yarn codegen
 
 ### 🚀 Build
 
-The build command will update the subgraph.yaml with the ethereum mainnet configuration and then re-compile the subgraph
+The build command will update the subgraph.yaml with the polygon mainnet configuration and then re-compile the subgraph
 
 ```shell
 yarn build
@@ -83,7 +83,7 @@ yarn build
 
 ### 🚀 Deploy
 
-The deploy command will update your subgraph to the ethereum mainnet network
+The deploy command will update your subgraph to the polygon mainnet network
 
 ```shell
 yarn deploy
