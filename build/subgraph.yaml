@@ -22,8 +22,6 @@ dataSources:
       abis:
         - name: Manager
           file: Manager/abis/Manager.json
-        - name: Pool
-          file: Manager/abis/Pool.json
       eventHandlers:
         - event: DonationAdded(address,bytes32,address,address,uint256)
           handler: handleDonationAdded
