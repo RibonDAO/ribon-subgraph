@@ -3,11 +3,11 @@ schema:
   file: schema.graphql
 dataSources:
   - kind: ethereum
-    name: Ribon
+    name: Manager
     network: mumbai
     source:
-      address: "0xD3850333819fBdd43784498F67010E5c87a2EAb3"
-      abi: Ribon
+      address: "0x411DF13350D6aB065Fc2d1Fd026b6d7f4133e9Df"
+      abi: Manager
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -18,20 +18,29 @@ dataSources:
         - Promoter
         - DonationBalance
         - PromoterDonation
+        - Pool
       abis:
-        - name: Ribon
-          file: Ribon/abis/Ribon.json
+        - name: Manager
+          file: Manager/abis/Manager.json
       eventHandlers:
-        - event: DonationAdded(bytes32,address,address,uint256)
+        - event: DonationAdded(address,bytes32,address,address,uint256)
           handler: handleDonationAdded
         - event: IntegrationBalanceAdded(address,uint256)
           handler: handleIntegrationBalanceAdded
         - event: IntegrationBalanceRemoved(address,uint256)
           handler: handleIntegrationBalanceRemoved
-        - event: NonProfitAdded(address)
+        - event: IntegrationCouncilChanged(address)
+          handler: handleIntegrationCouncilChanged
+        - event: NonProfitAdded(address,address)
           handler: handleNonProfitAdded
-        - event: NonProfitRemoved(address)
+        - event: NonProfitRemoved(address,address)
           handler: handleNonProfitRemoved
-        - event: PoolBalanceIncreased(address,uint256)
+        - event: NonProfitCouncilChanged(address)
+          handler: handleNonProfitCouncilChanged
+        - event: PoolBalanceIncreased(address,address,uint256)
           handler: handlePoolBalanceIncreased
-      file: Ribon/Ribon.wasm
+        - event: PoolBalanceTransfered(address,address)
+          handler: handlePoolBalanceTransfered
+        - event: PoolCreated(address,address)
+          handler: handlePoolCreated
+      file: Manager/Manager.wasm

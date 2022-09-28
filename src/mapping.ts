@@ -1,26 +1,30 @@
 import { BigInt, Bytes } from "@graphprotocol/graph-ts";
 import {
-  Ribon,
+  Manager,
   DonationAdded,
   IntegrationBalanceAdded,
   IntegrationBalanceRemoved,
   NonProfitAdded,
   NonProfitRemoved,
   PoolBalanceIncreased,
-} from "../generated/Ribon/Ribon";
+  PoolCreated,
+  PoolBalanceTransfered,
+} from "../generated/Manager/Manager";
 import {
   NonProfit,
   Integration,
   Promoter,
   DonationBalance,
   PromoterDonation,
+  Pool,
 } from "../generated/schema";
 
 export function handleDonationAdded(event: DonationAdded): void {
   let idDonation =
     event.params.user.toHex() +
     event.params.integration.toHex() +
-    event.params.nonProfit.toHex();
+    event.params.nonProfit.toHex() +
+    event.params.pool.toHex();
   let entity = DonationBalance.load(idDonation);
   let integration = Integration.load(event.params.integration.toHex());
 
@@ -33,11 +37,13 @@ export function handleDonationAdded(event: DonationAdded): void {
 
   if (integration) {
     integration.balance = integration.balance.minus(event.params.amount);
+    entity.integration = integration.id;
   }
 
   entity.user = event.params.user;
-  entity.integration = event.params.integration;
-  entity.nonProfit = event.params.nonProfit;
+  entity.integration = event.params.integration.toHex();
+  entity.nonProfit = event.params.nonProfit.toHex();
+  entity.pool = event.params.pool.toHex();
 
   entity.save();
 }
@@ -64,14 +70,10 @@ export function handleIntegrationBalanceRemoved(
   let integration = event.params.integration.toHex();
   let entity = Integration.load(integration);
 
-  if (!entity) {
-    entity = new Integration(integration);
-    entity.balance = BigInt.fromI32(0);
+  if (entity) {
+    entity.balance = entity.balance.minus(event.params.amount);
+    entity.save();
   }
-
-  entity.balance = entity.balance.minus(event.params.amount);
-
-  entity.save();
 }
 
 export function handleNonProfitAdded(event: NonProfitAdded): void {
@@ -83,6 +85,7 @@ export function handleNonProfitAdded(event: NonProfitAdded): void {
   }
 
   entity.isNonProfitOnWhitelist = true;
+  entity.pool = event.params.pool.toHex();
 
   entity.save();
 }
@@ -91,18 +94,31 @@ export function handleNonProfitRemoved(event: NonProfitRemoved): void {
   let nonProfit = event.params.nonProfit.toHex();
   let entity = NonProfit.load(nonProfit);
 
-  if (!entity) {
-    entity = new NonProfit(nonProfit);
+  if (entity) {
+    entity.isNonProfitOnWhitelist = false;
+    entity.pool = event.params.pool.toHex();
+    entity.save();
   }
+}
 
-  entity.isNonProfitOnWhitelist = false;
+export function handlePoolCreated(event: PoolCreated): void {
+  let pool = event.params.pool.toHex();
+  let entity = new Pool(pool);
+  entity.balance = BigInt.fromI32(0);
 
   entity.save();
 }
 
 export function handlePoolBalanceIncreased(event: PoolBalanceIncreased): void {
   let promoter = event.params.promoter.toHex();
+  let pool = event.params.pool.toHex();
   let entity = Promoter.load(promoter);
+  let entityPool = Pool.load(pool);
+
+  if (entityPool) {
+    entityPool.balance = entityPool.balance.plus(event.params.amount);
+    entityPool.save();
+  }
 
   if (!entity) {
     entity = new Promoter(promoter);
@@ -114,11 +130,24 @@ export function handlePoolBalanceIncreased(event: PoolBalanceIncreased): void {
   );
 
   entity.totalDonated = entity.totalDonated.plus(event.params.amount);
-
   entityPromoterDonation.amountDonated = event.params.amount;
   entityPromoterDonation.timestamp = event.block.timestamp;
-  entityPromoterDonation.promoter = event.params.promoter;
+  entityPromoterDonation.promoter = event.params.promoter.toHex();
+  entityPromoterDonation.pool = pool;
 
   entity.save();
   entityPromoterDonation.save();
+}
+
+export function handlePoolBalanceTransfered(
+  event: PoolBalanceTransfered
+): void {
+  let pool = event.params.pool.toHex();
+  let wallet = event.params.wallet.toHex();
+  let entity = Pool.load(pool);
+
+  if (entity) {
+    entity.balance = BigInt.fromI32(0);
+    entity.save();
+  }
 }
