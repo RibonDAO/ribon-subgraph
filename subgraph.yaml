@@ -4,7 +4,7 @@ schema:
 dataSources:
   - kind: ethereum
     name: Manager
-    network: mumbai
+    network: matic
     source:
       address: "0x411DF13350D6aB065Fc2d1Fd026b6d7f4133e9Df"
       abi: Manager
@@ -29,14 +29,10 @@ dataSources:
           handler: handleIntegrationBalanceAdded
         - event: IntegrationBalanceRemoved(address,uint256)
           handler: handleIntegrationBalanceRemoved
-        - event: IntegrationCouncilChanged(address)
-          handler: handleIntegrationCouncilChanged
         - event: NonProfitAdded(address,address)
           handler: handleNonProfitAdded
         - event: NonProfitRemoved(address,address)
           handler: handleNonProfitRemoved
-        - event: NonProfitCouncilChanged(address)
-          handler: handleNonProfitCouncilChanged
         - event: PoolBalanceIncreased(address,address,uint256)
           handler: handlePoolBalanceIncreased
         - event: PoolBalanceTransfered(address,address)
