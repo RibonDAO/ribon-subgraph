@@ -5,6 +5,7 @@
     "codegen": "graph codegen",
     "build": "graph build",
     "deploy": "graph deploy --node https://api.thegraph.com/deploy/ ribondao/subgraphribon",
+    "deploy testnet": "graph deploy --node https://api.thegraph.com/deploy/ ribondao/ribonsubgraph",
     "test": "graph test",
     "coverage": "graph test -- -c",
     "create-local": "graph create --node http://localhost:8020/ ribondao/subgraphribon",
