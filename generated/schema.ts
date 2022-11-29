@@ -221,7 +221,7 @@ export class DonationBalance extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
-    this.set("user", Value.fromBytes(Bytes.empty()));
+    this.set("donationBatch", Value.fromString(""));
     this.set("integration", Value.fromString(""));
     this.set("nonProfit", Value.fromString(""));
     this.set("totalDonated", Value.fromBigInt(BigInt.zero()));
@@ -254,13 +254,13 @@ export class DonationBalance extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get user(): Bytes {
-    let value = this.get("user");
-    return value!.toBytes();
+  get donationBatch(): string {
+    let value = this.get("donationBatch");
+    return value!.toString();
   }
 
-  set user(value: Bytes) {
-    this.set("user", Value.fromBytes(value));
+  set donationBatch(value: string) {
+    this.set("donationBatch", Value.fromString(value));
   }
 
   get integration(): string {

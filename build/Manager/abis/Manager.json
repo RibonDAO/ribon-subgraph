@@ -31,9 +31,9 @@
       },
       {
         "indexed": false,
-        "internalType": "bytes32",
-        "name": "user",
-        "type": "bytes32"
+        "internalType": "address",
+        "name": "nonProfit",
+        "type": "address"
       },
       {
         "indexed": false,
@@ -43,9 +43,9 @@
       },
       {
         "indexed": false,
-        "internalType": "address",
-        "name": "nonProfit",
-        "type": "address"
+        "internalType": "string",
+        "name": "_donation_batch",
+        "type": "string"
       },
       {
         "indexed": false,
@@ -298,7 +298,13 @@
       }
     ],
     "name": "createPool",
-    "outputs": [],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -315,9 +321,14 @@
         "type": "address"
       },
       {
-        "internalType": "bytes32",
-        "name": "_user",
-        "type": "bytes32"
+        "internalType": "address",
+        "name": "_integration",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "_donation_batch",
+        "type": "string"
       },
       {
         "internalType": "uint256",

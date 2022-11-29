@@ -27,16 +27,16 @@ export class DonationAdded__Params {
     return this._event.parameters[0].value.toAddress();
   }
 
-  get user(): Bytes {
-    return this._event.parameters[1].value.toBytes();
+  get nonProfit(): Address {
+    return this._event.parameters[1].value.toAddress();
   }
 
   get integration(): Address {
     return this._event.parameters[2].value.toAddress();
   }
 
-  get nonProfit(): Address {
-    return this._event.parameters[3].value.toAddress();
+  get _donation_batch(): string {
+    return this._event.parameters[3].value.toString();
   }
 
   get amount(): BigInt {
@@ -276,6 +276,25 @@ export class Manager__fetchPoolsResult {
 export class Manager extends ethereum.SmartContract {
   static bind(address: Address): Manager {
     return new Manager("Manager", address);
+  }
+
+  createPool(_token: Address): Address {
+    let result = super.call("createPool", "createPool(address):(address)", [
+      ethereum.Value.fromAddress(_token)
+    ]);
+
+    return result[0].toAddress();
+  }
+
+  try_createPool(_token: Address): ethereum.CallResult<Address> {
+    let result = super.tryCall("createPool", "createPool(address):(address)", [
+      ethereum.Value.fromAddress(_token)
+    ]);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
   fetchPools(_index: BigInt, _length: BigInt): Manager__fetchPoolsResult {
@@ -596,6 +615,10 @@ export class CreatePoolCall__Outputs {
   constructor(call: CreatePoolCall) {
     this._call = call;
   }
+
+  get value0(): Address {
+    return this._call.outputValues[0].value.toAddress();
+  }
 }
 
 export class DonateThroughIntegrationCall extends ethereum.Call {
@@ -623,12 +646,16 @@ export class DonateThroughIntegrationCall__Inputs {
     return this._call.inputValues[1].value.toAddress();
   }
 
-  get _user(): Bytes {
-    return this._call.inputValues[2].value.toBytes();
+  get _integration(): Address {
+    return this._call.inputValues[2].value.toAddress();
+  }
+
+  get _donation_batch(): string {
+    return this._call.inputValues[3].value.toString();
   }
 
   get _amount(): BigInt {
-    return this._call.inputValues[3].value.toBigInt();
+    return this._call.inputValues[4].value.toBigInt();
   }
 }
 

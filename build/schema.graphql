@@ -23,7 +23,7 @@ type Pool @entity {
 
 type DonationBalance @entity {
   id: ID!
-  user: Bytes!
+  donationBatch: String!
   integration: Integration!
   nonProfit: NonProfit!
   totalDonated: BigInt!
