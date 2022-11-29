@@ -104,8 +104,9 @@ export function handleNonProfitRemoved(event: NonProfitRemoved): void {
 export function handlePoolCreated(event: PoolCreated): void {
   let pool = event.params.pool.toHex();
   let entity = new Pool(pool);
-  entity.balance = BigInt.fromI32(0);
 
+  entity.balance = BigInt.fromI32(0);
+  entity.timestamp = event.block.timestamp;
   entity.save();
 }
 
