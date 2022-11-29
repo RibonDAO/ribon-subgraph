@@ -220,27 +220,27 @@ describe("Manager", () => {
         pool,
         nonProfit,
         integration,
-        _donationBatch.toString()
+        _donationBatch
       );
       handleDonationAdded(newEntityEvent);
 
       assert.fieldEquals(
         "DonationBalance",
-        _donationBatch.toString() + integration + nonProfit + pool,
+        _donationBatch + integration + nonProfit + pool,
         "donationBatch",
-        _donationBatch.toString()
+        _donationBatch
       );
 
       assert.fieldEquals(
         "DonationBalance",
-        _donationBatch.toString() + integration + nonProfit + pool,
+        _donationBatch + integration + nonProfit + pool,
         "totalDonated",
         "1"
       );
 
       assert.fieldEquals(
         "DonationBalance",
-        _donationBatch.toString() + integration + nonProfit + pool,
+        _donationBatch + integration + nonProfit + pool,
         "nonProfit",
         nonProfit
       );
