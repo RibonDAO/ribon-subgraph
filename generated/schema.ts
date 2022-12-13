@@ -158,6 +158,7 @@ export class Pool extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
+    this.set("timestamp", Value.fromBigInt(BigInt.zero()));
     this.set("balance", Value.fromBigInt(BigInt.zero()));
   }
 
@@ -185,6 +186,15 @@ export class Pool extends Entity {
 
   set id(value: string) {
     this.set("id", Value.fromString(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value!.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
   }
 
   get balance(): BigInt {

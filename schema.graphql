@@ -16,6 +16,7 @@ type NonProfit @entity {
 
 type Pool @entity {
   id: ID!
+  timestamp: BigInt!
   balance: BigInt!
   nonProfits: [NonProfit!]! @derivedFrom(field: "pool")
 }
