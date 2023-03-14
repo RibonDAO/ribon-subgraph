@@ -21,10 +21,11 @@ import {
 
 export function handleDonationAdded(event: DonationAdded): void {
   let idDonation =
-    event.params.user.toHex() +
+    event.params._donation_batch +
     event.params.integration.toHex() +
     event.params.nonProfit.toHex() +
     event.params.pool.toHex();
+
   let entity = DonationBalance.load(idDonation);
   let integration = Integration.load(event.params.integration.toHex());
 
@@ -40,7 +41,7 @@ export function handleDonationAdded(event: DonationAdded): void {
     entity.integration = integration.id;
   }
 
-  entity.user = event.params.user;
+  entity.donationBatch = event.params._donation_batch.toString();
   entity.integration = event.params.integration.toHex();
   entity.nonProfit = event.params.nonProfit.toHex();
   entity.pool = event.params.pool.toHex();

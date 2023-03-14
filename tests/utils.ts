@@ -116,9 +116,9 @@ export function createNewPoolBalanceTransferedEvent(
 
 export function createNewDonationAddedEvent(
   pool: string,
-  user: ByteArray,
+  nonProfit: string,
   integration: string,
-  nonProfit: string
+  donationBatch: string,
 ): DonationAdded {
   let mockEvent = newMockEvent();
   let newEntityEvent = new DonationAdded(
@@ -136,9 +136,10 @@ export function createNewDonationAddedEvent(
     "pool",
     ethereum.Value.fromAddress(Address.fromString(pool))
   );
-  let userParam = new ethereum.EventParam(
-    "user",
-    ethereum.Value.fromBytes(Bytes.fromByteArray(user))
+
+  let donationBatchParam = new ethereum.EventParam(
+    "_donation_batch",
+    ethereum.Value.fromString(donationBatch)
   );
 
   let integrationParam = new ethereum.EventParam(
@@ -155,9 +156,9 @@ export function createNewDonationAddedEvent(
   );
 
   newEntityEvent.parameters.push(poolParam);
-  newEntityEvent.parameters.push(userParam);
-  newEntityEvent.parameters.push(integrationParam);
   newEntityEvent.parameters.push(nonProfitParam);
+  newEntityEvent.parameters.push(integrationParam);
+  newEntityEvent.parameters.push(donationBatchParam);
   newEntityEvent.parameters.push(totalDonatedParam);
 
   return newEntityEvent;

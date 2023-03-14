@@ -209,39 +209,38 @@ describe("Manager", () => {
     });
 
     test("#DonationAdded", () => {
-      let user = Bytes.fromHexString(
-        "0xd229e8696a794bb2669821b444690c05f1faa8337ffba5053914b66c99dd39e0"
-      );
-
+      let _donationBatch =
+        "bafybeicdsk6drjhubevvw67jhhfg325n3gdvpzb5vtdd2dxq5a2nh725pq";
       let integration = "0x3c651eca8944e24b7f70817b14ea8345834503ad";
       let nonProfit = "0xf20c382d2a95eb19f9164435aed59e5c59bc1fd9";
       let pool = "0x026b2ed6b34c98f6624b448865642056d04d730c";
+      let amount = BigInt.fromI32(3);
 
       let newEntityEvent = createNewDonationAddedEvent(
         pool,
-        user,
+        nonProfit,
         integration,
-        nonProfit
+        _donationBatch
       );
       handleDonationAdded(newEntityEvent);
 
       assert.fieldEquals(
         "DonationBalance",
-        user.toHex() + integration + nonProfit + pool,
-        "user",
-        user.toHex()
+        _donationBatch + integration + nonProfit + pool,
+        "donationBatch",
+        _donationBatch
       );
 
       assert.fieldEquals(
         "DonationBalance",
-        user.toHex() + integration + nonProfit + pool,
+        _donationBatch + integration + nonProfit + pool,
         "totalDonated",
         "1"
       );
 
       assert.fieldEquals(
         "DonationBalance",
-        user.toHex() + integration + nonProfit + pool,
+        _donationBatch + integration + nonProfit + pool,
         "nonProfit",
         nonProfit
       );
