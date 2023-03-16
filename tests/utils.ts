@@ -26,7 +26,8 @@ export function createNewPoolCreatedEvent(
     mockEvent.logType,
     mockEvent.block,
     mockEvent.transaction,
-    mockEvent.parameters
+    mockEvent.parameters,
+    null
   );
   newEntityEvent.parameters = new Array();
 
@@ -58,7 +59,8 @@ export function createNewPoolBalanceIncreasedEvent(
     mockEvent.logType,
     mockEvent.block,
     mockEvent.transaction,
-    mockEvent.parameters
+    mockEvent.parameters,
+    null
   );
   newEntityEvent.parameters = new Array();
 
@@ -95,7 +97,8 @@ export function createNewPoolBalanceTransferedEvent(
     mockEvent.logType,
     mockEvent.block,
     mockEvent.transaction,
-    mockEvent.parameters
+    mockEvent.parameters,
+    null
   );
   newEntityEvent.parameters = new Array();
 
@@ -129,7 +132,8 @@ export function createNewDonationAddedEvent(
     mockEvent.logType,
     mockEvent.block,
     mockEvent.transaction,
-    mockEvent.parameters
+    mockEvent.parameters,
+    null
   );
   newEntityEvent.parameters = new Array();
 
@@ -177,7 +181,8 @@ export function createNewNonProfitAddedEvent(
     mockEvent.logType,
     mockEvent.block,
     mockEvent.transaction,
-    mockEvent.parameters
+    mockEvent.parameters,
+    null
   );
   newEntityEvent.parameters = new Array();
 
@@ -208,7 +213,8 @@ export function createNewNonProfitRemovedEvent(
     mockEvent.logType,
     mockEvent.block,
     mockEvent.transaction,
-    mockEvent.parameters
+    mockEvent.parameters,
+    null
   );
   newEntityEvent.parameters = new Array();
 
@@ -239,7 +245,8 @@ export function createNewIntegrationControllerBalanceAddedEvent(
     mockEvent.logType,
     mockEvent.block,
     mockEvent.transaction,
-    mockEvent.parameters
+    mockEvent.parameters,
+    null
   );
   newEntityEvent.parameters = new Array();
 
@@ -270,7 +277,8 @@ export function createNewIntegrationControllerBalanceRemovedEvent(
     mockEvent.logType,
     mockEvent.block,
     mockEvent.transaction,
-    mockEvent.parameters
+    mockEvent.parameters,
+    null
   );
   newEntityEvent.parameters = new Array();
 
@@ -300,7 +308,8 @@ export function createNewPoolIncreaseFeeChangedEvent(
     mockEvent.logType,
     mockEvent.block,
     mockEvent.transaction,
-    mockEvent.parameters
+    mockEvent.parameters,
+    null
   );
   newEntityEvent.parameters = new Array();
 
