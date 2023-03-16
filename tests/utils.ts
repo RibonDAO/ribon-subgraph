@@ -7,7 +7,7 @@ import {
   PoolBalanceIncreased,
   IntegrationControllerBalanceAdded,
   IntegrationControllerBalanceRemoved,
-PoolBalanceTransfered,
+  PoolBalanceTransfered,
 } from "../generated/Manager/Manager";
 
 import { Address, ByteArray, ethereum } from "@graphprotocol/graph-ts";
