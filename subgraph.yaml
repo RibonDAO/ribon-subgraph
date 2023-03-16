@@ -25,10 +25,10 @@ dataSources:
       eventHandlers:
         - event: DonationAdded(address,address,address,string,uint256)
           handler: handleDonationAdded
-        - event: IntegrationBalanceAdded(address,uint256)
-          handler: handleIntegrationBalanceAdded
-        - event: IntegrationBalanceRemoved(address,uint256)
-          handler: handleIntegrationBalanceRemoved
+        - event: IntegrationControllerBalanceAdded(address,uint256)
+          handler: handleIntegrationControllerBalanceAdded
+        - event: IntegrationControllerBalanceRemoved(address,uint256)
+          handler: handleIntegrationControllerBalanceRemoved
         - event: NonProfitAdded(address,address)
           handler: handleNonProfitAdded
         - event: NonProfitRemoved(address,address)

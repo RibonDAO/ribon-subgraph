@@ -10,6 +10,24 @@ import {
   BigInt
 } from "@graphprotocol/graph-ts";
 
+export class DirectlyContributionFeeChanged extends ethereum.Event {
+  get params(): DirectlyContributionFeeChanged__Params {
+    return new DirectlyContributionFeeChanged__Params(this);
+  }
+}
+
+export class DirectlyContributionFeeChanged__Params {
+  _event: DirectlyContributionFeeChanged;
+
+  constructor(event: DirectlyContributionFeeChanged) {
+    this._event = event;
+  }
+
+  get directlyContributionFee(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+}
+
 export class DonationAdded extends ethereum.Event {
   get params(): DonationAdded__Params {
     return new DonationAdded__Params(this);
@@ -31,11 +49,11 @@ export class DonationAdded__Params {
     return this._event.parameters[1].value.toAddress();
   }
 
-  get integration(): Address {
+  get integrationController(): Address {
     return this._event.parameters[2].value.toAddress();
   }
 
-  get _donation_batch(): string {
+  get donationBatch(): string {
     return this._event.parameters[3].value.toString();
   }
 
@@ -62,20 +80,20 @@ export class GovernanceCouncilChanged__Params {
   }
 }
 
-export class IntegrationBalanceAdded extends ethereum.Event {
-  get params(): IntegrationBalanceAdded__Params {
-    return new IntegrationBalanceAdded__Params(this);
+export class IntegrationControllerBalanceAdded extends ethereum.Event {
+  get params(): IntegrationControllerBalanceAdded__Params {
+    return new IntegrationControllerBalanceAdded__Params(this);
   }
 }
 
-export class IntegrationBalanceAdded__Params {
-  _event: IntegrationBalanceAdded;
+export class IntegrationControllerBalanceAdded__Params {
+  _event: IntegrationControllerBalanceAdded;
 
-  constructor(event: IntegrationBalanceAdded) {
+  constructor(event: IntegrationControllerBalanceAdded) {
     this._event = event;
   }
 
-  get integration(): Address {
+  get integrationController(): Address {
     return this._event.parameters[0].value.toAddress();
   }
 
@@ -84,20 +102,20 @@ export class IntegrationBalanceAdded__Params {
   }
 }
 
-export class IntegrationBalanceRemoved extends ethereum.Event {
-  get params(): IntegrationBalanceRemoved__Params {
-    return new IntegrationBalanceRemoved__Params(this);
+export class IntegrationControllerBalanceRemoved extends ethereum.Event {
+  get params(): IntegrationControllerBalanceRemoved__Params {
+    return new IntegrationControllerBalanceRemoved__Params(this);
   }
 }
 
-export class IntegrationBalanceRemoved__Params {
-  _event: IntegrationBalanceRemoved;
+export class IntegrationControllerBalanceRemoved__Params {
+  _event: IntegrationControllerBalanceRemoved;
 
-  constructor(event: IntegrationBalanceRemoved) {
+  constructor(event: IntegrationControllerBalanceRemoved) {
     this._event = event;
   }
 
-  get integration(): Address {
+  get integrationController(): Address {
     return this._event.parameters[0].value.toAddress();
   }
 
@@ -256,6 +274,24 @@ export class PoolCreated__Params {
   }
 }
 
+export class PoolIncreaseFeeChanged extends ethereum.Event {
+  get params(): PoolIncreaseFeeChanged__Params {
+    return new PoolIncreaseFeeChanged__Params(this);
+  }
+}
+
+export class PoolIncreaseFeeChanged__Params {
+  _event: PoolIncreaseFeeChanged;
+
+  constructor(event: PoolIncreaseFeeChanged) {
+    this._event = event;
+  }
+
+  get poolIncreaseFee(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+}
+
 export class Manager__fetchPoolsResult {
   value0: Array<Address>;
   value1: BigInt;
@@ -290,6 +326,63 @@ export class Manager extends ethereum.SmartContract {
     let result = super.tryCall("createPool", "createPool(address):(address)", [
       ethereum.Value.fromAddress(_token)
     ]);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  directlyContributionFee(): BigInt {
+    let result = super.call(
+      "directlyContributionFee",
+      "directlyContributionFee():(uint256)",
+      []
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_directlyContributionFee(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "directlyContributionFee",
+      "directlyContributionFee():(uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  existPool(param0: Address): boolean {
+    let result = super.call("existPool", "existPool(address):(bool)", [
+      ethereum.Value.fromAddress(param0)
+    ]);
+
+    return result[0].toBoolean();
+  }
+
+  try_existPool(param0: Address): ethereum.CallResult<boolean> {
+    let result = super.tryCall("existPool", "existPool(address):(bool)", [
+      ethereum.Value.fromAddress(param0)
+    ]);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  feeWallet(): Address {
+    let result = super.call("feeWallet", "feeWallet():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_feeWallet(): ethereum.CallResult<Address> {
+    let result = super.tryCall("feeWallet", "feeWallet():(address)", []);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -360,6 +453,29 @@ export class Manager extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
+  integrationControllers(param0: Address): BigInt {
+    let result = super.call(
+      "integrationControllers",
+      "integrationControllers(address):(uint256)",
+      [ethereum.Value.fromAddress(param0)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_integrationControllers(param0: Address): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "integrationControllers",
+      "integrationControllers(address):(uint256)",
+      [ethereum.Value.fromAddress(param0)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
   integrationCouncil(): Address {
     let result = super.call(
       "integrationCouncil",
@@ -383,27 +499,6 @@ export class Manager extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
-  integrations(param0: Address): BigInt {
-    let result = super.call("integrations", "integrations(address):(uint256)", [
-      ethereum.Value.fromAddress(param0)
-    ]);
-
-    return result[0].toBigInt();
-  }
-
-  try_integrations(param0: Address): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "integrations",
-      "integrations(address):(uint256)",
-      [ethereum.Value.fromAddress(param0)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
   nonProfitCouncil(): Address {
     let result = super.call(
       "nonProfitCouncil",
@@ -425,6 +520,29 @@ export class Manager extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  poolIncreaseFee(): BigInt {
+    let result = super.call(
+      "poolIncreaseFee",
+      "poolIncreaseFee():(uint256)",
+      []
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_poolIncreaseFee(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "poolIncreaseFee",
+      "poolIncreaseFee():(uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   pools(param0: BigInt): Address {
@@ -475,6 +593,18 @@ export class ConstructorCall__Inputs {
   get _nonProfitCouncil(): Address {
     return this._call.inputValues[2].value.toAddress();
   }
+
+  get _feeWallet(): Address {
+    return this._call.inputValues[3].value.toAddress();
+  }
+
+  get _poolIncreaseFee(): BigInt {
+    return this._call.inputValues[4].value.toBigInt();
+  }
+
+  get _directlyContributionFee(): BigInt {
+    return this._call.inputValues[5].value.toBigInt();
+  }
 }
 
 export class ConstructorCall__Outputs {
@@ -485,24 +615,24 @@ export class ConstructorCall__Outputs {
   }
 }
 
-export class AddIntegrationBalanceCall extends ethereum.Call {
-  get inputs(): AddIntegrationBalanceCall__Inputs {
-    return new AddIntegrationBalanceCall__Inputs(this);
+export class AddIntegrationControllerBalanceCall extends ethereum.Call {
+  get inputs(): AddIntegrationControllerBalanceCall__Inputs {
+    return new AddIntegrationControllerBalanceCall__Inputs(this);
   }
 
-  get outputs(): AddIntegrationBalanceCall__Outputs {
-    return new AddIntegrationBalanceCall__Outputs(this);
+  get outputs(): AddIntegrationControllerBalanceCall__Outputs {
+    return new AddIntegrationControllerBalanceCall__Outputs(this);
   }
 }
 
-export class AddIntegrationBalanceCall__Inputs {
-  _call: AddIntegrationBalanceCall;
+export class AddIntegrationControllerBalanceCall__Inputs {
+  _call: AddIntegrationControllerBalanceCall;
 
-  constructor(call: AddIntegrationBalanceCall) {
+  constructor(call: AddIntegrationControllerBalanceCall) {
     this._call = call;
   }
 
-  get _integration(): Address {
+  get _integrationController(): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 
@@ -511,10 +641,10 @@ export class AddIntegrationBalanceCall__Inputs {
   }
 }
 
-export class AddIntegrationBalanceCall__Outputs {
-  _call: AddIntegrationBalanceCall;
+export class AddIntegrationControllerBalanceCall__Outputs {
+  _call: AddIntegrationControllerBalanceCall;
 
-  constructor(call: AddIntegrationBalanceCall) {
+  constructor(call: AddIntegrationControllerBalanceCall) {
     this._call = call;
   }
 }
@@ -577,12 +707,54 @@ export class AddPoolBalanceCall__Inputs {
   get _amount(): BigInt {
     return this._call.inputValues[1].value.toBigInt();
   }
+
+  get feeable(): boolean {
+    return this._call.inputValues[2].value.toBoolean();
+  }
 }
 
 export class AddPoolBalanceCall__Outputs {
   _call: AddPoolBalanceCall;
 
   constructor(call: AddPoolBalanceCall) {
+    this._call = call;
+  }
+}
+
+export class ContributeToNonProfitCall extends ethereum.Call {
+  get inputs(): ContributeToNonProfitCall__Inputs {
+    return new ContributeToNonProfitCall__Inputs(this);
+  }
+
+  get outputs(): ContributeToNonProfitCall__Outputs {
+    return new ContributeToNonProfitCall__Outputs(this);
+  }
+}
+
+export class ContributeToNonProfitCall__Inputs {
+  _call: ContributeToNonProfitCall;
+
+  constructor(call: ContributeToNonProfitCall) {
+    this._call = call;
+  }
+
+  get _pool(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get _nonProfit(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+
+  get _amount(): BigInt {
+    return this._call.inputValues[2].value.toBigInt();
+  }
+}
+
+export class ContributeToNonProfitCall__Outputs {
+  _call: ContributeToNonProfitCall;
+
+  constructor(call: ContributeToNonProfitCall) {
     this._call = call;
   }
 }
@@ -646,7 +818,7 @@ export class DonateThroughIntegrationCall__Inputs {
     return this._call.inputValues[1].value.toAddress();
   }
 
-  get _integration(): Address {
+  get _integrationController(): Address {
     return this._call.inputValues[2].value.toAddress();
   }
 
@@ -667,24 +839,24 @@ export class DonateThroughIntegrationCall__Outputs {
   }
 }
 
-export class RemoveIntegrationBalanceCall extends ethereum.Call {
-  get inputs(): RemoveIntegrationBalanceCall__Inputs {
-    return new RemoveIntegrationBalanceCall__Inputs(this);
+export class RemoveIntegrationControllerBalanceCall extends ethereum.Call {
+  get inputs(): RemoveIntegrationControllerBalanceCall__Inputs {
+    return new RemoveIntegrationControllerBalanceCall__Inputs(this);
   }
 
-  get outputs(): RemoveIntegrationBalanceCall__Outputs {
-    return new RemoveIntegrationBalanceCall__Outputs(this);
+  get outputs(): RemoveIntegrationControllerBalanceCall__Outputs {
+    return new RemoveIntegrationControllerBalanceCall__Outputs(this);
   }
 }
 
-export class RemoveIntegrationBalanceCall__Inputs {
-  _call: RemoveIntegrationBalanceCall;
+export class RemoveIntegrationControllerBalanceCall__Inputs {
+  _call: RemoveIntegrationControllerBalanceCall;
 
-  constructor(call: RemoveIntegrationBalanceCall) {
+  constructor(call: RemoveIntegrationControllerBalanceCall) {
     this._call = call;
   }
 
-  get _integration(): Address {
+  get _integrationController(): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 
@@ -693,10 +865,10 @@ export class RemoveIntegrationBalanceCall__Inputs {
   }
 }
 
-export class RemoveIntegrationBalanceCall__Outputs {
-  _call: RemoveIntegrationBalanceCall;
+export class RemoveIntegrationControllerBalanceCall__Outputs {
+  _call: RemoveIntegrationControllerBalanceCall;
 
-  constructor(call: RemoveIntegrationBalanceCall) {
+  constructor(call: RemoveIntegrationControllerBalanceCall) {
     this._call = call;
   }
 }
@@ -731,6 +903,36 @@ export class RemoveNonProfitFromWhitelistCall__Outputs {
   _call: RemoveNonProfitFromWhitelistCall;
 
   constructor(call: RemoveNonProfitFromWhitelistCall) {
+    this._call = call;
+  }
+}
+
+export class SetDirectlyContributionFeeCall extends ethereum.Call {
+  get inputs(): SetDirectlyContributionFeeCall__Inputs {
+    return new SetDirectlyContributionFeeCall__Inputs(this);
+  }
+
+  get outputs(): SetDirectlyContributionFeeCall__Outputs {
+    return new SetDirectlyContributionFeeCall__Outputs(this);
+  }
+}
+
+export class SetDirectlyContributionFeeCall__Inputs {
+  _call: SetDirectlyContributionFeeCall;
+
+  constructor(call: SetDirectlyContributionFeeCall) {
+    this._call = call;
+  }
+
+  get _directlyContributionFee(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+}
+
+export class SetDirectlyContributionFeeCall__Outputs {
+  _call: SetDirectlyContributionFeeCall;
+
+  constructor(call: SetDirectlyContributionFeeCall) {
     this._call = call;
   }
 }
@@ -821,6 +1023,36 @@ export class SetNonProfitCouncilCall__Outputs {
   _call: SetNonProfitCouncilCall;
 
   constructor(call: SetNonProfitCouncilCall) {
+    this._call = call;
+  }
+}
+
+export class SetPoolIncreaseFeeCall extends ethereum.Call {
+  get inputs(): SetPoolIncreaseFeeCall__Inputs {
+    return new SetPoolIncreaseFeeCall__Inputs(this);
+  }
+
+  get outputs(): SetPoolIncreaseFeeCall__Outputs {
+    return new SetPoolIncreaseFeeCall__Outputs(this);
+  }
+}
+
+export class SetPoolIncreaseFeeCall__Inputs {
+  _call: SetPoolIncreaseFeeCall;
+
+  constructor(call: SetPoolIncreaseFeeCall) {
+    this._call = call;
+  }
+
+  get _poolIncreaseFee(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+}
+
+export class SetPoolIncreaseFeeCall__Outputs {
+  _call: SetPoolIncreaseFeeCall;
+
+  constructor(call: SetPoolIncreaseFeeCall) {
     this._call = call;
   }
 }

@@ -2,8 +2,8 @@ import { BigInt, Bytes } from "@graphprotocol/graph-ts";
 import {
   Manager,
   DonationAdded,
-  IntegrationBalanceAdded,
-  IntegrationBalanceRemoved,
+  IntegrationControllerBalanceAdded,
+  IntegrationControllerBalanceRemoved,
   NonProfitAdded,
   NonProfitRemoved,
   PoolBalanceIncreased,
@@ -12,7 +12,7 @@ import {
 } from "../generated/Manager/Manager";
 import {
   NonProfit,
-  Integration,
+  IntegrationController,
   Promoter,
   DonationBalance,
   PromoterDonation,
@@ -22,12 +22,12 @@ import {
 export function handleDonationAdded(event: DonationAdded): void {
   let idDonation =
     event.params._donation_batch +
-    event.params.integration.toHex() +
+    event.params.integrationController.toHex() +
     event.params.nonProfit.toHex() +
     event.params.pool.toHex();
 
   let entity = DonationBalance.load(idDonation);
-  let integration = Integration.load(event.params.integration.toHex());
+  let integration = IntegrationController.load(event.params.integrationController.toHex());
 
   if (!entity) {
     entity = new DonationBalance(idDonation);
@@ -42,21 +42,21 @@ export function handleDonationAdded(event: DonationAdded): void {
   }
 
   entity.donationBatch = event.params._donation_batch.toString();
-  entity.integration = event.params.integration.toHex();
+  entity.integration = event.params.integrationController.toHex();
   entity.nonProfit = event.params.nonProfit.toHex();
   entity.pool = event.params.pool.toHex();
 
   entity.save();
 }
 
-export function handleIntegrationBalanceAdded(
-  event: IntegrationBalanceAdded
+export function handleIntegrationControllerBalanceAdded(
+  event: IntegrationControllerBalanceAdded
 ): void {
-  let integration = event.params.integration.toHex();
-  let entity = Integration.load(integration);
+  let integration = event.params.integrationController.toHex();
+  let entity = IntegrationController.load(integration);
 
   if (!entity) {
-    entity = new Integration(integration);
+    entity = new IntegrationController(integration);
     entity.balance = BigInt.fromI32(0);
   }
 
@@ -65,11 +65,11 @@ export function handleIntegrationBalanceAdded(
   entity.save();
 }
 
-export function handleIntegrationBalanceRemoved(
-  event: IntegrationBalanceRemoved
+export function handleIntegrationControllerBalanceRemoved(
+  event: IntegrationControllerBalanceRemoved
 ): void {
-  let integration = event.params.integration.toHex();
-  let entity = Integration.load(integration);
+  let integration = event.params.integrationController.toHex();
+  let entity = IntegrationController.load(integration);
 
   if (entity) {
     entity.balance = entity.balance.minus(event.params.amount);

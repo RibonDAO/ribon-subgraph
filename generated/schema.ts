@@ -11,7 +11,7 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
-export class Integration extends Entity {
+export class IntegrationController extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -21,19 +21,24 @@ export class Integration extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save Integration entity without an ID");
+    assert(
+      id != null,
+      "Cannot save IntegrationController entity without an ID"
+    );
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        "Cannot save Integration entity with non-string ID. " +
+        "Cannot save IntegrationController entity with non-string ID. " +
           'Considering using .toHex() to convert the "id" to a string.'
       );
-      store.set("Integration", id.toString(), this);
+      store.set("IntegrationController", id.toString(), this);
     }
   }
 
-  static load(id: string): Integration | null {
-    return changetype<Integration | null>(store.get("Integration", id));
+  static load(id: string): IntegrationController | null {
+    return changetype<IntegrationController | null>(
+      store.get("IntegrationController", id)
+    );
   }
 
   get id(): string {
@@ -222,7 +227,7 @@ export class DonationBalance extends Entity {
     this.set("id", Value.fromString(id));
 
     this.set("donationBatch", Value.fromString(""));
-    this.set("integration", Value.fromString(""));
+    this.set("IntegrationController", Value.fromString(""));
     this.set("nonProfit", Value.fromString(""));
     this.set("totalDonated", Value.fromBigInt(BigInt.zero()));
     this.set("pool", Value.fromString(""));
@@ -263,13 +268,13 @@ export class DonationBalance extends Entity {
     this.set("donationBatch", Value.fromString(value));
   }
 
-  get integration(): string {
-    let value = this.get("integration");
+  get IntegrationController(): string {
+    let value = this.get("IntegrationController");
     return value!.toString();
   }
 
-  set integration(value: string) {
-    this.set("integration", Value.fromString(value));
+  set IntegrationController(value: string) {
+    this.set("IntegrationController", Value.fromString(value));
   }
 
   get nonProfit(): string {
