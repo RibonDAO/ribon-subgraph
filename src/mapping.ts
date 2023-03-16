@@ -9,7 +9,7 @@ import {
   PoolBalanceIncreased,
   PoolCreated,
   PoolBalanceTransfered,
-  // PoolIncreaseFeeChanged,
+  PoolIncreaseFeeChanged,
 } from "../generated/Manager/Manager";
 import {
   NonProfit,
@@ -156,15 +156,15 @@ export function handlePoolBalanceTransfered(
   }
 }
 
-// export function handlePoolIncreaseFeeChanged(event: PoolIncreaseFeeChanged): void {
-//   let entity = PoolIncreaseFee.load("0");
+export function handlePoolIncreaseFeeChanged(event: PoolIncreaseFeeChanged): void {
+  let entity = PoolIncreaseFee.load("0");
 
-//   if (!entity) {
-//     entity = new PoolIncreaseFee("0");
-//     entity.fee = BigInt.fromI32(0);
-//   }
+  if (!entity) {
+    entity = new PoolIncreaseFee("0");
+    entity.fee = BigInt.fromI32(0);
+  }
   
-//   entity.timestamp = event.block.timestamp;
-//   entity.fee = entity.fee.plus(event.params.poolIncreaseFee);
-//   entity.save();
-// }
+  entity.timestamp = event.block.timestamp;
+  entity.fee = entity.fee.plus(event.params.poolIncreaseFee);
+  entity.save();
+}

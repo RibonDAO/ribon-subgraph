@@ -8,6 +8,7 @@ import {
   IntegrationControllerBalanceAdded,
   IntegrationControllerBalanceRemoved,
   PoolBalanceTransfered,
+  PoolIncreaseFeeChanged,
 } from "../generated/Manager/Manager";
 
 import { Address, ByteArray, ethereum } from "@graphprotocol/graph-ts";
@@ -284,6 +285,31 @@ export function createNewIntegrationControllerBalanceRemovedEvent(
 
   newEntityEvent.parameters.push(integrationParam);
   newEntityEvent.parameters.push(amountParam);
+
+  return newEntityEvent;
+}
+
+export function createNewPoolIncreaseFeeChangedEvent(
+  fee: string,
+): PoolIncreaseFeeChanged {
+  let mockEvent = newMockEvent();
+  let newEntityEvent = new PoolIncreaseFeeChanged(
+    mockEvent.address,
+    mockEvent.logIndex,
+    mockEvent.transactionLogIndex,
+    mockEvent.logType,
+    mockEvent.block,
+    mockEvent.transaction,
+    mockEvent.parameters
+  );
+  newEntityEvent.parameters = new Array();
+
+  let feeParam = new ethereum.EventParam(
+    "poolIncreaseFee",
+    ethereum.Value.fromAddress(Address.fromString(fee))
+  );
+
+  newEntityEvent.parameters.push(feeParam);
 
   return newEntityEvent;
 }

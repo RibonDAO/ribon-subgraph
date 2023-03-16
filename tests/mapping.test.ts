@@ -15,6 +15,7 @@ import {
   handleIntegrationControllerBalanceAdded,
   handleIntegrationControllerBalanceRemoved,
   handlePoolBalanceTransfered,
+  handlePoolIncreaseFeeChanged,
 } from "../src/mapping";
 import { BigInt, Bytes } from "@graphprotocol/graph-ts";
 import {
@@ -26,6 +27,7 @@ import {
   createNewIntegrationControllerBalanceAddedEvent,
   createNewIntegrationControllerBalanceRemovedEvent,
   createNewPoolBalanceTransferedEvent,
+  createNewPoolIncreaseFeeChangedEvent,
 } from "./utils";
 
 describe("Manager", () => {
@@ -243,6 +245,26 @@ describe("Manager", () => {
         _donationBatch + integration + nonProfit + pool,
         "nonProfit",
         nonProfit
+      );
+      clearStore();
+    });
+  });
+
+  describe("Pool Increase Fee", () => {
+    test("#PoolIncreaseFeeChanged", () => {
+      let fee = BigInt.fromI32(3).toString();
+      let id = "0";
+
+      let newEntityEvent = createNewPoolIncreaseFeeChangedEvent(
+        fee
+      );
+      handlePoolIncreaseFeeChanged(newEntityEvent);
+
+      assert.fieldEquals(
+        "PoolIncreaseFee",
+        id,
+        "fee",
+        fee,
       );
       clearStore();
     });
