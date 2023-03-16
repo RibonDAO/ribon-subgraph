@@ -89,7 +89,7 @@ describe("Manager", () => {
 
   describe("Integration", () => {
     describe("when integration does not yet exist", () => {
-      test("#IntegrationBalanceAdded", () => {
+      test("#IntegrationControllerBalanceAdded", () => {
         let integration = "0x3c651eca8944e24b7f70817b14ea8345834503ad";
         let amount = BigInt.fromI32(5);
 
@@ -99,8 +99,8 @@ describe("Manager", () => {
         );
         handleIntegrationControllerBalanceAdded(newEntityEvent);
 
-        assert.fieldEquals("Integration", integration, "id", integration);
-        assert.fieldEquals("Integration", integration, "balance", "5");
+        assert.fieldEquals("IntegrationController", integration, "id", integration);
+        assert.fieldEquals("IntegrationController", integration, "balance", "5");
 
         clearStore();
       });
@@ -114,11 +114,11 @@ describe("Manager", () => {
         );
         handleIntegrationControllerBalanceRemoved(newEntityEvent);
 
-        assert.notInStore("Integration", integration);
+        assert.notInStore("IntegrationController", integration);
       });
     });
     describe("when the integration already exists", () => {
-      test("#IntegrationBalanceAdded", () => {
+      test("#IntegrationControllerBalanceAdded", () => {
         let integration = "0x3c651eca8944e24b7f70817b14ea8345834503ad";
         let amount = BigInt.fromI32(5);
 
@@ -128,8 +128,8 @@ describe("Manager", () => {
         );
         handleIntegrationControllerBalanceAdded(newEntityEvent);
 
-        assert.fieldEquals("Integration", integration, "id", integration);
-        assert.fieldEquals("Integration", integration, "balance", "5");
+        assert.fieldEquals("IntegrationController", integration, "id", integration);
+        assert.fieldEquals("IntegrationController", integration, "balance", "5");
       });
       test("#IntegrationControllerBalanceRemoved", () => {
         let integration = "0x3c651eca8944e24b7f70817b14ea8345834503ad";
@@ -141,8 +141,8 @@ describe("Manager", () => {
         );
         handleIntegrationControllerBalanceRemoved(newEntityEvent);
 
-        assert.fieldEquals("Integration", integration, "id", integration);
-        assert.fieldEquals("Integration", integration, "balance", "2");
+        assert.fieldEquals("IntegrationController", integration, "id", integration);
+        assert.fieldEquals("IntegrationController", integration, "balance", "2");
       });
     });
   });
@@ -252,7 +252,7 @@ describe("Manager", () => {
 
   describe("Pool Increase Fee", () => {
     test("#PoolIncreaseFeeChanged", () => {
-      let fee = BigInt.fromI32(3).toString();
+      let fee = BigInt.fromI32(3);
       let id = "0";
 
       let newEntityEvent = createNewPoolIncreaseFeeChangedEvent(
@@ -264,7 +264,7 @@ describe("Manager", () => {
         "PoolIncreaseFee",
         id,
         "fee",
-        fee,
+        "3",
       );
       clearStore();
     });

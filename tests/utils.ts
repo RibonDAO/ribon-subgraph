@@ -298,7 +298,7 @@ export function createNewIntegrationControllerBalanceRemovedEvent(
 }
 
 export function createNewPoolIncreaseFeeChangedEvent(
-  fee: string,
+  fee: BigInt,
 ): PoolIncreaseFeeChanged {
   let mockEvent = newMockEvent();
   let newEntityEvent = new PoolIncreaseFeeChanged(
@@ -315,7 +315,7 @@ export function createNewPoolIncreaseFeeChangedEvent(
 
   let feeParam = new ethereum.EventParam(
     "poolIncreaseFee",
-    ethereum.Value.fromAddress(Address.fromString(fee))
+    ethereum.Value.fromI32(fee.toI32())
   );
 
   newEntityEvent.parameters.push(feeParam);
