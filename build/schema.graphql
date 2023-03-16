@@ -21,6 +21,12 @@ type Pool @entity {
   nonProfits: [NonProfit!]! @derivedFrom(field: "pool")
 }
 
+type PoolIncreaseFee @entity {
+  id: ID!
+  fee: BigInt!
+  timestamp: BigInt!
+}
+
 type DonationBalance @entity {
   id: ID!
   donationBatch: String!

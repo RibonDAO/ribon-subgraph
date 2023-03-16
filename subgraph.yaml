@@ -39,4 +39,6 @@ dataSources:
           handler: handlePoolBalanceTransfered
         - event: PoolCreated(address,address)
           handler: handlePoolCreated
+        - event: PoolIncreaseFeeChanged(uint256)
+          handler: handlePoolIncreaseFeeChanged
       file: ./src/mapping.ts

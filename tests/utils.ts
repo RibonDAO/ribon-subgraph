@@ -5,9 +5,9 @@ import {
   NonProfitRemoved,
   PoolCreated,
   PoolBalanceIncreased,
-  IntegrationBalanceAdded,
-  IntegrationBalanceRemoved,
-  PoolBalanceTransfered,
+  IntegrationControllerBalanceAdded,
+  IntegrationControllerBalanceRemoved,
+PoolBalanceTransfered,
 } from "../generated/Manager/Manager";
 
 import { Address, ByteArray, ethereum } from "@graphprotocol/graph-ts";
@@ -117,7 +117,7 @@ export function createNewPoolBalanceTransferedEvent(
 export function createNewDonationAddedEvent(
   pool: string,
   nonProfit: string,
-  integration: string,
+  integrationController: string,
   donationBatch: string,
 ): DonationAdded {
   let mockEvent = newMockEvent();
@@ -143,8 +143,8 @@ export function createNewDonationAddedEvent(
   );
 
   let integrationParam = new ethereum.EventParam(
-    "integration",
-    ethereum.Value.fromAddress(Address.fromString(integration))
+    "integrationController",
+    ethereum.Value.fromAddress(Address.fromString(integrationController))
   );
   let nonProfitParam = new ethereum.EventParam(
     "nonProfit",
@@ -226,12 +226,12 @@ export function createNewNonProfitRemovedEvent(
   return newEntityEvent;
 }
 
-export function createNewIntegrationBalanceAddedEvent(
-  integration: string,
+export function createNewIntegrationControllerBalanceAddedEvent(
+  integrationController: string,
   amount: BigInt
-): IntegrationBalanceAdded {
+): IntegrationControllerBalanceAdded {
   let mockEvent = newMockEvent();
-  let newEntityEvent = new IntegrationBalanceAdded(
+  let newEntityEvent = new IntegrationControllerBalanceAdded(
     mockEvent.address,
     mockEvent.logIndex,
     mockEvent.transactionLogIndex,
@@ -243,8 +243,8 @@ export function createNewIntegrationBalanceAddedEvent(
   newEntityEvent.parameters = new Array();
 
   let integrationParam = new ethereum.EventParam(
-    "integration",
-    ethereum.Value.fromAddress(Address.fromString(integration))
+    "integrationController",
+    ethereum.Value.fromAddress(Address.fromString(integrationController))
   );
   let amountParam = new ethereum.EventParam(
     "amount",
@@ -257,12 +257,12 @@ export function createNewIntegrationBalanceAddedEvent(
   return newEntityEvent;
 }
 
-export function createNewIntegrationBalanceRemovedEvent(
-  integration: string,
+export function createNewIntegrationControllerBalanceRemovedEvent(
+  integrationController: string,
   amount: BigInt
-): IntegrationBalanceRemoved {
+): IntegrationControllerBalanceRemoved {
   let mockEvent = newMockEvent();
-  let newEntityEvent = new IntegrationBalanceRemoved(
+  let newEntityEvent = new IntegrationControllerBalanceRemoved(
     mockEvent.address,
     mockEvent.logIndex,
     mockEvent.transactionLogIndex,
@@ -274,8 +274,8 @@ export function createNewIntegrationBalanceRemovedEvent(
   newEntityEvent.parameters = new Array();
 
   let integrationParam = new ethereum.EventParam(
-    "integration",
-    ethereum.Value.fromAddress(Address.fromString(integration))
+    "integrationController",
+    ethereum.Value.fromAddress(Address.fromString(integrationController))
   );
   let amountParam = new ethereum.EventParam(
     "amount",

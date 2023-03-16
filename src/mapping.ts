@@ -9,6 +9,7 @@ import {
   PoolBalanceIncreased,
   PoolCreated,
   PoolBalanceTransfered,
+  // PoolIncreaseFeeChanged,
 } from "../generated/Manager/Manager";
 import {
   NonProfit,
@@ -17,6 +18,7 @@ import {
   DonationBalance,
   PromoterDonation,
   Pool,
+  PoolIncreaseFee,
 } from "../generated/schema";
 
 export function handleDonationAdded(event: DonationAdded): void {
@@ -153,3 +155,16 @@ export function handlePoolBalanceTransfered(
     entity.save();
   }
 }
+
+// export function handlePoolIncreaseFeeChanged(event: PoolIncreaseFeeChanged): void {
+//   let entity = PoolIncreaseFee.load("0");
+
+//   if (!entity) {
+//     entity = new PoolIncreaseFee("0");
+//     entity.fee = BigInt.fromI32(0);
+//   }
+  
+//   entity.timestamp = event.block.timestamp;
+//   entity.fee = entity.fee.plus(event.params.poolIncreaseFee);
+//   entity.save();
+// }
