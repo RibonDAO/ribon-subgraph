@@ -1,4 +1,4 @@
-type Integration @entity {
+type IntegrationController @entity {
   id: ID!
   balance: BigInt!
 }
@@ -24,7 +24,7 @@ type Pool @entity {
 type DonationBalance @entity {
   id: ID!
   donationBatch: String!
-  integration: Integration!
+  integrationController: IntegrationController!
   nonProfit: NonProfit!
   totalDonated: BigInt!
   pool: Pool!

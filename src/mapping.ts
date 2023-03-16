@@ -21,7 +21,7 @@ import {
 
 export function handleDonationAdded(event: DonationAdded): void {
   let idDonation =
-    event.params._donation_batch +
+    event.params.donationBatch +
     event.params.integrationController.toHex() +
     event.params.nonProfit.toHex() +
     event.params.pool.toHex();
@@ -38,11 +38,11 @@ export function handleDonationAdded(event: DonationAdded): void {
 
   if (integration) {
     integration.balance = integration.balance.minus(event.params.amount);
-    entity.integration = integration.id;
+    entity.integrationController = integration.id;
   }
 
-  entity.donationBatch = event.params._donation_batch.toString();
-  entity.integration = event.params.integrationController.toHex();
+  entity.donationBatch = event.params.donationBatch.toString();
+  entity.integrationController = event.params.integrationController.toHex();
   entity.nonProfit = event.params.nonProfit.toHex();
   entity.pool = event.params.pool.toHex();
 

@@ -227,7 +227,7 @@ export class DonationBalance extends Entity {
     this.set("id", Value.fromString(id));
 
     this.set("donationBatch", Value.fromString(""));
-    this.set("IntegrationController", Value.fromString(""));
+    this.set("integrationController", Value.fromString(""));
     this.set("nonProfit", Value.fromString(""));
     this.set("totalDonated", Value.fromBigInt(BigInt.zero()));
     this.set("pool", Value.fromString(""));
@@ -268,13 +268,13 @@ export class DonationBalance extends Entity {
     this.set("donationBatch", Value.fromString(value));
   }
 
-  get IntegrationController(): string {
-    let value = this.get("IntegrationController");
+  get integrationController(): string {
+    let value = this.get("integrationController");
     return value!.toString();
   }
 
-  set IntegrationController(value: string) {
-    this.set("IntegrationController", Value.fromString(value));
+  set integrationController(value: string) {
+    this.set("integrationController", Value.fromString(value));
   }
 
   get nonProfit(): string {
