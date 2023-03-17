@@ -41,4 +41,6 @@ dataSources:
           handler: handlePoolCreated
         - event: PoolIncreaseFeeChanged(uint256)
           handler: handlePoolIncreaseFeeChanged
+        - event: DirectlyContributionFeeChanged(uint256)
+          handler: handleDirectlyContributionFeeChanged
       file: Manager/Manager.wasm

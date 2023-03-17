@@ -43,3 +43,9 @@ type PromoterDonation @entity {
   timestamp: BigInt!
   pool: Pool!
 }
+
+type DirectlyContributionFee @entity {
+  id: ID!
+  fee: BigInt!
+  timestamp: BigInt!
+}
