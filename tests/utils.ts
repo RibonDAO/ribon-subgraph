@@ -9,6 +9,7 @@ import {
   IntegrationControllerBalanceRemoved,
   PoolBalanceTransfered,
   PoolIncreaseFeeChanged,
+  DirectlyContributionFeeChanged,
 } from "../generated/Manager/Manager";
 
 import { Address, ByteArray, ethereum } from "@graphprotocol/graph-ts";
@@ -315,6 +316,32 @@ export function createNewPoolIncreaseFeeChangedEvent(
 
   let feeParam = new ethereum.EventParam(
     "poolIncreaseFee",
+    ethereum.Value.fromI32(fee.toI32())
+  );
+
+  newEntityEvent.parameters.push(feeParam);
+
+  return newEntityEvent;
+}
+
+export function createNewDirectlyContributionFeeChanged(
+  fee: BigInt,
+): DirectlyContributionFeeChanged {
+  let mockEvent = newMockEvent();
+  let newEntityEvent = new DirectlyContributionFeeChanged(
+    mockEvent.address,
+    mockEvent.logIndex,
+    mockEvent.transactionLogIndex,
+    mockEvent.logType,
+    mockEvent.block,
+    mockEvent.transaction,
+    mockEvent.parameters,
+    null
+  );
+  newEntityEvent.parameters = new Array();
+
+  let feeParam = new ethereum.EventParam(
+    "DirectlyContributionFee",
     ethereum.Value.fromI32(fee.toI32())
   );
 

@@ -16,6 +16,7 @@ import {
   handleIntegrationControllerBalanceRemoved,
   handlePoolBalanceTransfered,
   handlePoolIncreaseFeeChanged,
+  handleDirectlyContributionFeeChanged,
 } from "../src/mapping";
 import { BigInt, Bytes } from "@graphprotocol/graph-ts";
 import {
@@ -28,6 +29,7 @@ import {
   createNewIntegrationControllerBalanceRemovedEvent,
   createNewPoolBalanceTransferedEvent,
   createNewPoolIncreaseFeeChangedEvent,
+  createNewDirectlyContributionFeeChanged,
 } from "./utils";
 
 describe("Manager", () => {
@@ -262,6 +264,26 @@ describe("Manager", () => {
 
       assert.fieldEquals(
         "PoolIncreaseFee",
+        id,
+        "fee",
+        "3",
+      );
+      clearStore();
+    });
+  });
+
+  describe("Directly Contribution Fee", () => {
+    test("#DirectlyContributionFeeChanged", () => {
+      let fee = BigInt.fromI32(3);
+      let id = "0";
+
+      let newEntityEvent = createNewDirectlyContributionFeeChanged(
+        fee
+      );
+      handleDirectlyContributionFeeChanged(newEntityEvent);
+
+      assert.fieldEquals(
+        "DirectlyContributionFee",
         id,
         "fee",
         "3",
