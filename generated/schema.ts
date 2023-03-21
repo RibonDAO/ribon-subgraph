@@ -11,29 +11,32 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
-export class Integration extends Entity {
+export class IntegrationController extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
-
-    this.set("balance", Value.fromBigInt(BigInt.zero()));
   }
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save Integration entity without an ID");
+    assert(
+      id != null,
+      "Cannot save IntegrationController entity without an ID"
+    );
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        "Cannot save Integration entity with non-string ID. " +
+        "Cannot save IntegrationController entity with non-string ID. " +
           'Considering using .toHex() to convert the "id" to a string.'
       );
-      store.set("Integration", id.toString(), this);
+      store.set("IntegrationController", id.toString(), this);
     }
   }
 
-  static load(id: string): Integration | null {
-    return changetype<Integration | null>(store.get("Integration", id));
+  static load(id: string): IntegrationController | null {
+    return changetype<IntegrationController | null>(
+      store.get("IntegrationController", id)
+    );
   }
 
   get id(): string {
@@ -59,8 +62,6 @@ export class Promoter extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
-
-    this.set("totalDonated", Value.fromBigInt(BigInt.zero()));
   }
 
   save(): void {
@@ -103,9 +104,6 @@ export class NonProfit extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
-
-    this.set("isNonProfitOnWhitelist", Value.fromBoolean(false));
-    this.set("pool", Value.fromString(""));
   }
 
   save(): void {
@@ -157,9 +155,6 @@ export class Pool extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
-
-    this.set("timestamp", Value.fromBigInt(BigInt.zero()));
-    this.set("balance", Value.fromBigInt(BigInt.zero()));
   }
 
   save(): void {
@@ -216,16 +211,61 @@ export class Pool extends Entity {
   }
 }
 
+export class PoolIncreaseFee extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save PoolIncreaseFee entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save PoolIncreaseFee entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("PoolIncreaseFee", id.toString(), this);
+    }
+  }
+
+  static load(id: string): PoolIncreaseFee | null {
+    return changetype<PoolIncreaseFee | null>(store.get("PoolIncreaseFee", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get fee(): BigInt {
+    let value = this.get("fee");
+    return value!.toBigInt();
+  }
+
+  set fee(value: BigInt) {
+    this.set("fee", Value.fromBigInt(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value!.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
+}
+
 export class DonationBalance extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
-
-    this.set("donationBatch", Value.fromString(""));
-    this.set("integration", Value.fromString(""));
-    this.set("nonProfit", Value.fromString(""));
-    this.set("totalDonated", Value.fromBigInt(BigInt.zero()));
-    this.set("pool", Value.fromString(""));
   }
 
   save(): void {
@@ -263,13 +303,13 @@ export class DonationBalance extends Entity {
     this.set("donationBatch", Value.fromString(value));
   }
 
-  get integration(): string {
-    let value = this.get("integration");
+  get integrationController(): string {
+    let value = this.get("integrationController");
     return value!.toString();
   }
 
-  set integration(value: string) {
-    this.set("integration", Value.fromString(value));
+  set integrationController(value: string) {
+    this.set("integrationController", Value.fromString(value));
   }
 
   get nonProfit(): string {
@@ -304,11 +344,6 @@ export class PromoterDonation extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
-
-    this.set("amountDonated", Value.fromBigInt(BigInt.zero()));
-    this.set("promoter", Value.fromString(""));
-    this.set("timestamp", Value.fromBigInt(BigInt.zero()));
-    this.set("pool", Value.fromString(""));
   }
 
   save(): void {
@@ -373,5 +408,61 @@ export class PromoterDonation extends Entity {
 
   set pool(value: string) {
     this.set("pool", Value.fromString(value));
+  }
+}
+
+export class DirectlyContributionFee extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(
+      id != null,
+      "Cannot save DirectlyContributionFee entity without an ID"
+    );
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save DirectlyContributionFee entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("DirectlyContributionFee", id.toString(), this);
+    }
+  }
+
+  static load(id: string): DirectlyContributionFee | null {
+    return changetype<DirectlyContributionFee | null>(
+      store.get("DirectlyContributionFee", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get fee(): BigInt {
+    let value = this.get("fee");
+    return value!.toBigInt();
+  }
+
+  set fee(value: BigInt) {
+    this.set("fee", Value.fromBigInt(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value!.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
   }
 }

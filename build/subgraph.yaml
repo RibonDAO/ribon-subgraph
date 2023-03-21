@@ -4,7 +4,7 @@ schema:
 dataSources:
   - kind: ethereum
     name: Manager
-    network: matic
+    network: mumbai
     source:
       address: "0x5c9Dc2D660115b00B21ba8F7ac9344d7649594A2"
       abi: Manager
@@ -25,10 +25,10 @@ dataSources:
       eventHandlers:
         - event: DonationAdded(address,address,address,string,uint256)
           handler: handleDonationAdded
-        - event: IntegrationBalanceAdded(address,uint256)
-          handler: handleIntegrationBalanceAdded
-        - event: IntegrationBalanceRemoved(address,uint256)
-          handler: handleIntegrationBalanceRemoved
+        - event: IntegrationControllerBalanceAdded(address,uint256)
+          handler: handleIntegrationControllerBalanceAdded
+        - event: IntegrationControllerBalanceRemoved(address,uint256)
+          handler: handleIntegrationControllerBalanceRemoved
         - event: NonProfitAdded(address,address)
           handler: handleNonProfitAdded
         - event: NonProfitRemoved(address,address)
@@ -39,4 +39,8 @@ dataSources:
           handler: handlePoolBalanceTransfered
         - event: PoolCreated(address,address)
           handler: handlePoolCreated
+        - event: PoolIncreaseFeeChanged(uint256)
+          handler: handlePoolIncreaseFeeChanged
+        - event: DirectlyContributionFeeChanged(uint256)
+          handler: handleDirectlyContributionFeeChanged
       file: Manager/Manager.wasm
