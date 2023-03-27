@@ -5,9 +5,11 @@ import {
   NonProfitRemoved,
   PoolCreated,
   PoolBalanceIncreased,
-  IntegrationBalanceAdded,
-  IntegrationBalanceRemoved,
+  IntegrationControllerBalanceAdded,
+  IntegrationControllerBalanceRemoved,
   PoolBalanceTransfered,
+  PoolIncreaseFeeChanged,
+  DirectlyContributionFeeChanged,
 } from "../generated/Manager/Manager";
 
 import { Address, ByteArray, ethereum } from "@graphprotocol/graph-ts";
@@ -25,7 +27,8 @@ export function createNewPoolCreatedEvent(
     mockEvent.logType,
     mockEvent.block,
     mockEvent.transaction,
-    mockEvent.parameters
+    mockEvent.parameters,
+    null
   );
   newEntityEvent.parameters = new Array();
 
@@ -57,7 +60,8 @@ export function createNewPoolBalanceIncreasedEvent(
     mockEvent.logType,
     mockEvent.block,
     mockEvent.transaction,
-    mockEvent.parameters
+    mockEvent.parameters,
+    null
   );
   newEntityEvent.parameters = new Array();
 
@@ -94,7 +98,8 @@ export function createNewPoolBalanceTransferedEvent(
     mockEvent.logType,
     mockEvent.block,
     mockEvent.transaction,
-    mockEvent.parameters
+    mockEvent.parameters,
+    null
   );
   newEntityEvent.parameters = new Array();
 
@@ -116,9 +121,9 @@ export function createNewPoolBalanceTransferedEvent(
 
 export function createNewDonationAddedEvent(
   pool: string,
-  user: ByteArray,
-  integration: string,
-  nonProfit: string
+  nonProfit: string,
+  integrationController: string,
+  donationBatch: string,
 ): DonationAdded {
   let mockEvent = newMockEvent();
   let newEntityEvent = new DonationAdded(
@@ -128,7 +133,8 @@ export function createNewDonationAddedEvent(
     mockEvent.logType,
     mockEvent.block,
     mockEvent.transaction,
-    mockEvent.parameters
+    mockEvent.parameters,
+    null
   );
   newEntityEvent.parameters = new Array();
 
@@ -136,14 +142,15 @@ export function createNewDonationAddedEvent(
     "pool",
     ethereum.Value.fromAddress(Address.fromString(pool))
   );
-  let userParam = new ethereum.EventParam(
-    "user",
-    ethereum.Value.fromBytes(Bytes.fromByteArray(user))
+
+  let donationBatchParam = new ethereum.EventParam(
+    "_donation_batch",
+    ethereum.Value.fromString(donationBatch)
   );
 
   let integrationParam = new ethereum.EventParam(
-    "integration",
-    ethereum.Value.fromAddress(Address.fromString(integration))
+    "integrationController",
+    ethereum.Value.fromAddress(Address.fromString(integrationController))
   );
   let nonProfitParam = new ethereum.EventParam(
     "nonProfit",
@@ -155,9 +162,9 @@ export function createNewDonationAddedEvent(
   );
 
   newEntityEvent.parameters.push(poolParam);
-  newEntityEvent.parameters.push(userParam);
-  newEntityEvent.parameters.push(integrationParam);
   newEntityEvent.parameters.push(nonProfitParam);
+  newEntityEvent.parameters.push(integrationParam);
+  newEntityEvent.parameters.push(donationBatchParam);
   newEntityEvent.parameters.push(totalDonatedParam);
 
   return newEntityEvent;
@@ -175,7 +182,8 @@ export function createNewNonProfitAddedEvent(
     mockEvent.logType,
     mockEvent.block,
     mockEvent.transaction,
-    mockEvent.parameters
+    mockEvent.parameters,
+    null
   );
   newEntityEvent.parameters = new Array();
 
@@ -206,7 +214,8 @@ export function createNewNonProfitRemovedEvent(
     mockEvent.logType,
     mockEvent.block,
     mockEvent.transaction,
-    mockEvent.parameters
+    mockEvent.parameters,
+    null
   );
   newEntityEvent.parameters = new Array();
 
@@ -225,25 +234,26 @@ export function createNewNonProfitRemovedEvent(
   return newEntityEvent;
 }
 
-export function createNewIntegrationBalanceAddedEvent(
-  integration: string,
+export function createNewIntegrationControllerBalanceAddedEvent(
+  integrationController: string,
   amount: BigInt
-): IntegrationBalanceAdded {
+): IntegrationControllerBalanceAdded {
   let mockEvent = newMockEvent();
-  let newEntityEvent = new IntegrationBalanceAdded(
+  let newEntityEvent = new IntegrationControllerBalanceAdded(
     mockEvent.address,
     mockEvent.logIndex,
     mockEvent.transactionLogIndex,
     mockEvent.logType,
     mockEvent.block,
     mockEvent.transaction,
-    mockEvent.parameters
+    mockEvent.parameters,
+    null
   );
   newEntityEvent.parameters = new Array();
 
   let integrationParam = new ethereum.EventParam(
-    "integration",
-    ethereum.Value.fromAddress(Address.fromString(integration))
+    "integrationController",
+    ethereum.Value.fromAddress(Address.fromString(integrationController))
   );
   let amountParam = new ethereum.EventParam(
     "amount",
@@ -256,25 +266,26 @@ export function createNewIntegrationBalanceAddedEvent(
   return newEntityEvent;
 }
 
-export function createNewIntegrationBalanceRemovedEvent(
-  integration: string,
+export function createNewIntegrationControllerBalanceRemovedEvent(
+  integrationController: string,
   amount: BigInt
-): IntegrationBalanceRemoved {
+): IntegrationControllerBalanceRemoved {
   let mockEvent = newMockEvent();
-  let newEntityEvent = new IntegrationBalanceRemoved(
+  let newEntityEvent = new IntegrationControllerBalanceRemoved(
     mockEvent.address,
     mockEvent.logIndex,
     mockEvent.transactionLogIndex,
     mockEvent.logType,
     mockEvent.block,
     mockEvent.transaction,
-    mockEvent.parameters
+    mockEvent.parameters,
+    null
   );
   newEntityEvent.parameters = new Array();
 
   let integrationParam = new ethereum.EventParam(
-    "integration",
-    ethereum.Value.fromAddress(Address.fromString(integration))
+    "integrationController",
+    ethereum.Value.fromAddress(Address.fromString(integrationController))
   );
   let amountParam = new ethereum.EventParam(
     "amount",
@@ -283,6 +294,58 @@ export function createNewIntegrationBalanceRemovedEvent(
 
   newEntityEvent.parameters.push(integrationParam);
   newEntityEvent.parameters.push(amountParam);
+
+  return newEntityEvent;
+}
+
+export function createNewPoolIncreaseFeeChangedEvent(
+  fee: BigInt,
+): PoolIncreaseFeeChanged {
+  let mockEvent = newMockEvent();
+  let newEntityEvent = new PoolIncreaseFeeChanged(
+    mockEvent.address,
+    mockEvent.logIndex,
+    mockEvent.transactionLogIndex,
+    mockEvent.logType,
+    mockEvent.block,
+    mockEvent.transaction,
+    mockEvent.parameters,
+    null
+  );
+  newEntityEvent.parameters = new Array();
+
+  let feeParam = new ethereum.EventParam(
+    "poolIncreaseFee",
+    ethereum.Value.fromI32(fee.toI32())
+  );
+
+  newEntityEvent.parameters.push(feeParam);
+
+  return newEntityEvent;
+}
+
+export function createNewDirectlyContributionFeeChanged(
+  fee: BigInt,
+): DirectlyContributionFeeChanged {
+  let mockEvent = newMockEvent();
+  let newEntityEvent = new DirectlyContributionFeeChanged(
+    mockEvent.address,
+    mockEvent.logIndex,
+    mockEvent.transactionLogIndex,
+    mockEvent.logType,
+    mockEvent.block,
+    mockEvent.transaction,
+    mockEvent.parameters,
+    null
+  );
+  newEntityEvent.parameters = new Array();
+
+  let feeParam = new ethereum.EventParam(
+    "DirectlyContributionFee",
+    ethereum.Value.fromI32(fee.toI32())
+  );
+
+  newEntityEvent.parameters.push(feeParam);
 
   return newEntityEvent;
 }

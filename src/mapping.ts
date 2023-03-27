@@ -2,31 +2,36 @@ import { BigInt, Bytes } from "@graphprotocol/graph-ts";
 import {
   Manager,
   DonationAdded,
-  IntegrationBalanceAdded,
-  IntegrationBalanceRemoved,
+  IntegrationControllerBalanceAdded,
+  IntegrationControllerBalanceRemoved,
   NonProfitAdded,
   NonProfitRemoved,
   PoolBalanceIncreased,
   PoolCreated,
   PoolBalanceTransfered,
+  PoolIncreaseFeeChanged,
+  DirectlyContributionFeeChanged
 } from "../generated/Manager/Manager";
 import {
   NonProfit,
-  Integration,
+  IntegrationController,
   Promoter,
   DonationBalance,
   PromoterDonation,
   Pool,
+  PoolIncreaseFee,
+  DirectlyContributionFee
 } from "../generated/schema";
 
 export function handleDonationAdded(event: DonationAdded): void {
   let idDonation =
-    event.params.user.toHex() +
-    event.params.integration.toHex() +
+    event.params.donationBatch +
+    event.params.integrationController.toHex() +
     event.params.nonProfit.toHex() +
     event.params.pool.toHex();
+
   let entity = DonationBalance.load(idDonation);
-  let integration = Integration.load(event.params.integration.toHex());
+  let integration = IntegrationController.load(event.params.integrationController.toHex());
 
   if (!entity) {
     entity = new DonationBalance(idDonation);
@@ -37,25 +42,25 @@ export function handleDonationAdded(event: DonationAdded): void {
 
   if (integration) {
     integration.balance = integration.balance.minus(event.params.amount);
-    entity.integration = integration.id;
+    entity.integrationController = integration.id;
   }
 
-  entity.user = event.params.user;
-  entity.integration = event.params.integration.toHex();
+  entity.donationBatch = event.params.donationBatch.toString();
+  entity.integrationController = event.params.integrationController.toHex();
   entity.nonProfit = event.params.nonProfit.toHex();
   entity.pool = event.params.pool.toHex();
 
   entity.save();
 }
 
-export function handleIntegrationBalanceAdded(
-  event: IntegrationBalanceAdded
+export function handleIntegrationControllerBalanceAdded(
+  event: IntegrationControllerBalanceAdded
 ): void {
-  let integration = event.params.integration.toHex();
-  let entity = Integration.load(integration);
+  let integration = event.params.integrationController.toHex();
+  let entity = IntegrationController.load(integration);
 
   if (!entity) {
-    entity = new Integration(integration);
+    entity = new IntegrationController(integration);
     entity.balance = BigInt.fromI32(0);
   }
 
@@ -64,11 +69,11 @@ export function handleIntegrationBalanceAdded(
   entity.save();
 }
 
-export function handleIntegrationBalanceRemoved(
-  event: IntegrationBalanceRemoved
+export function handleIntegrationControllerBalanceRemoved(
+  event: IntegrationControllerBalanceRemoved
 ): void {
-  let integration = event.params.integration.toHex();
-  let entity = Integration.load(integration);
+  let integration = event.params.integrationController.toHex();
+  let entity = IntegrationController.load(integration);
 
   if (entity) {
     entity.balance = entity.balance.minus(event.params.amount);
@@ -151,4 +156,30 @@ export function handlePoolBalanceTransfered(
     entity.balance = BigInt.fromI32(0);
     entity.save();
   }
+}
+
+export function handlePoolIncreaseFeeChanged(event: PoolIncreaseFeeChanged): void {
+  let entity = PoolIncreaseFee.load("0");
+
+  if (!entity) {
+    entity = new PoolIncreaseFee("0");
+    entity.fee = BigInt.fromI32(0);
+  }
+  
+  entity.timestamp = event.block.timestamp;
+  entity.fee = entity.fee.plus(event.params.poolIncreaseFee);
+  entity.save();
+}
+
+export function handleDirectlyContributionFeeChanged(event: DirectlyContributionFeeChanged): void {
+  let entity = DirectlyContributionFee.load("0");
+
+  if (!entity) {
+    entity = new DirectlyContributionFee("0");
+    entity.fee = BigInt.fromI32(0);
+  }
+  
+  entity.timestamp = event.block.timestamp;
+  entity.fee = entity.fee.plus(event.params.directlyContributionFee);
+  entity.save();
 }

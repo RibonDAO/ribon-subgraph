@@ -1,4 +1,4 @@
-type Integration @entity {
+type IntegrationController @entity {
   id: ID!
   balance: BigInt!
 }
@@ -21,10 +21,16 @@ type Pool @entity {
   nonProfits: [NonProfit!]! @derivedFrom(field: "pool")
 }
 
+type PoolIncreaseFee @entity {
+  id: ID!
+  fee: BigInt!
+  timestamp: BigInt!
+}
+
 type DonationBalance @entity {
   id: ID!
-  user: Bytes!
-  integration: Integration!
+  donationBatch: String!
+  integrationController: IntegrationController!
   nonProfit: NonProfit!
   totalDonated: BigInt!
   pool: Pool!
@@ -36,4 +42,10 @@ type PromoterDonation @entity {
   promoter: Promoter!
   timestamp: BigInt!
   pool: Pool!
+}
+
+type DirectlyContributionFee @entity {
+  id: ID!
+  fee: BigInt!
+  timestamp: BigInt!
 }
