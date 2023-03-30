@@ -40,9 +40,9 @@ export function handleDonationAdded(event: DonationAdded): void {
 
   entity.totalDonated = entity.totalDonated.plus(event.params.amount);
 
-  if (integration) {
-    integration.balance = integration.balance.minus(event.params.amount);
-    entity.integrationController = integration.id;
+  if (!integration) {
+    integration = new IntegrationController(event.params.integrationController.toHex());
+    integration.save
   }
 
   entity.donationBatch = event.params.donationBatch.toString();

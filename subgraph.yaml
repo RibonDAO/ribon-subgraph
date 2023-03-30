@@ -1,16 +1,16 @@
-specVersion: 0.0.2
+specVersion: 0.0.4
 schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
     name: Manager
-    network: mumbai
+    network: matic
     source:
-      address: "0x5c9Dc2D660115b00B21ba8F7ac9344d7649594A2"
+      address: "0xE2847c17Be357b1536De359cb6799D367F8ad2ec"
       abi: Manager
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - NonProfit

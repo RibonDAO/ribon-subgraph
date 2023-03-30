@@ -303,13 +303,21 @@ export class DonationBalance extends Entity {
     this.set("donationBatch", Value.fromString(value));
   }
 
-  get integrationController(): string {
+  get integrationController(): string | null {
     let value = this.get("integrationController");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
   }
 
-  set integrationController(value: string) {
-    this.set("integrationController", Value.fromString(value));
+  set integrationController(value: string | null) {
+    if (!value) {
+      this.unset("integrationController");
+    } else {
+      this.set("integrationController", Value.fromString(<string>value));
+    }
   }
 
   get nonProfit(): string {
