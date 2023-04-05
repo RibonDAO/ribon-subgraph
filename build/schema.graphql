@@ -30,7 +30,7 @@ type PoolIncreaseFee @entity {
 type DonationBalance @entity {
   id: ID!
   donationBatch: String!
-  integrationController: IntegrationController!
+  integrationController: IntegrationController
   nonProfit: NonProfit!
   totalDonated: BigInt!
   pool: Pool!

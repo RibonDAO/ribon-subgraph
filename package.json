@@ -4,7 +4,7 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ ribondao/ribonsubgraph",
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ ribondao/subgraphribon",
     "test": "graph test",
     "coverage": "graph test -- -c",
     "create-local": "graph create --node http://127.0.0.1:8020/ ribondao/subgraphribon",
