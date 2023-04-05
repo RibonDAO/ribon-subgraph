@@ -42,6 +42,7 @@ export function handleDonationAdded(event: DonationAdded): void {
 
   if (!integration) {
     integration = new IntegrationController(event.params.integrationController.toHex());
+    integration.balance = BigInt.fromI32(0);
     integration.save
   }
 
